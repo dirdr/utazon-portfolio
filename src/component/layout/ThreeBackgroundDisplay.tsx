@@ -4,7 +4,6 @@ import React, {
   useState,
   useRef,
   useMemo,
-  useCallback,
 } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
@@ -361,15 +360,16 @@ const useMouseBasedLighting = () => {
     LIGHT_CONFIG.BASE_Z,
   ]);
 
-  const throttledHandleMouseMove = useCallback(
-    throttle((event: MouseEvent) => {
-      const { keyLightPos: newKeyPos, fillLightPos: newFillPos } =
-        calculateLightingPositions(event.clientX, event.clientY);
+  const throttledHandleMouseMove = useMemo(
+    () =>
+      throttle((event: MouseEvent) => {
+        const { keyLightPos: newKeyPos, fillLightPos: newFillPos } =
+          calculateLightingPositions(event.clientX, event.clientY);
 
-      setKeyLightPos(newKeyPos);
-      setFillLightPos(newFillPos);
-    }, 16),
-    [setFillLightPos, setKeyLightPos],
+        setKeyLightPos(newKeyPos);
+        setFillLightPos(newFillPos);
+      }, 16),
+    [],
   );
 
   useEffect(() => {

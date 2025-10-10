@@ -62,75 +62,6 @@ export const CursorTrail = ({
     [maxPoints, fadeTime],
   );
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!enabled) return;
-
-      const { clientX, clientY } = e;
-      const now = Date.now();
-
-      currentMouseRef.current = { x: clientX, y: clientY };
-      if (!animationRef.current) {
-        const animate = () => {
-          const canvas = canvasRef.current;
-          const ctx = canvas?.getContext("2d");
-          if (!canvas || !ctx || !enabled) {
-            animationRef.current = undefined;
-            return;
-          }
-
-          const needsResize =
-            canvas.width !== window.innerWidth ||
-            canvas.height !== window.innerHeight;
-
-          if (needsResize) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            canvasSizeRef.current = {
-              width: canvas.width,
-              height: canvas.height,
-            };
-          }
-
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          const currentTime = Date.now();
-
-          if (currentTime - lastCleanupRef.current > 100) {
-            const cutoff = currentTime - fadeTime;
-            pointsRef.current = pointsRef.current.filter(
-              (point) => point.timestamp >= cutoff,
-            );
-            lastCleanupRef.current = currentTime;
-          }
-
-          drawTrailPoints(ctx, currentTime);
-          drawStaticGlow(ctx);
-
-          if (enabled) {
-            animationRef.current = requestAnimationFrame(animate);
-          } else {
-            animationRef.current = undefined;
-          }
-        };
-
-        animationRef.current = requestAnimationFrame(animate);
-      }
-      const deltaX = Math.abs(clientX - lastTrailPointRef.current.x);
-      const deltaY = Math.abs(clientY - lastTrailPointRef.current.y);
-
-      if (deltaX > 2 || deltaY > 2) {
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const timeDiff = now - lastTrailPointRef.current.timestamp;
-        const speed = timeDiff > 0 ? distance / timeDiff : 0;
-
-        addPoint(clientX, clientY, speed);
-        lastTrailPointRef.current = { x: clientX, y: clientY, timestamp: now };
-      }
-    },
-    [enabled, addPoint, fadeTime],
-  );
-
   const drawTrailPoints = useMemo(() => {
     return (ctx: CanvasRenderingContext2D, now: number) => {
       const points = pointsRef.current;
@@ -242,6 +173,75 @@ export const CursorTrail = ({
       ctx.fill();
     };
   }, [rippleSize, intensity]);
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!enabled) return;
+
+      const { clientX, clientY } = e;
+      const now = Date.now();
+
+      currentMouseRef.current = { x: clientX, y: clientY };
+      if (!animationRef.current) {
+        const animate = () => {
+          const canvas = canvasRef.current;
+          const ctx = canvas?.getContext("2d");
+          if (!canvas || !ctx || !enabled) {
+            animationRef.current = undefined;
+            return;
+          }
+
+          const needsResize =
+            canvas.width !== window.innerWidth ||
+            canvas.height !== window.innerHeight;
+
+          if (needsResize) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvasSizeRef.current = {
+              width: canvas.width,
+              height: canvas.height,
+            };
+          }
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          const currentTime = Date.now();
+
+          if (currentTime - lastCleanupRef.current > 100) {
+            const cutoff = currentTime - fadeTime;
+            pointsRef.current = pointsRef.current.filter(
+              (point) => point.timestamp >= cutoff,
+            );
+            lastCleanupRef.current = currentTime;
+          }
+
+          drawTrailPoints(ctx, currentTime);
+          drawStaticGlow(ctx);
+
+          if (enabled) {
+            animationRef.current = requestAnimationFrame(animate);
+          } else {
+            animationRef.current = undefined;
+          }
+        };
+
+        animationRef.current = requestAnimationFrame(animate);
+      }
+      const deltaX = Math.abs(clientX - lastTrailPointRef.current.x);
+      const deltaY = Math.abs(clientY - lastTrailPointRef.current.y);
+
+      if (deltaX > 2 || deltaY > 2) {
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const timeDiff = now - lastTrailPointRef.current.timestamp;
+        const speed = timeDiff > 0 ? distance / timeDiff : 0;
+
+        addPoint(clientX, clientY, speed);
+        lastTrailPointRef.current = { x: clientX, y: clientY, timestamp: now };
+      }
+    },
+    [enabled, addPoint, fadeTime, drawTrailPoints, drawStaticGlow],
+  );
 
   useEffect(() => {
     if (!enabled) {

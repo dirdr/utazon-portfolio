@@ -69,7 +69,7 @@ export const Modal: React.FC<ModalProps> = ({
     return () => {
       lenis?.start();
     };
-  }, [isOpen]);
+  }, [isOpen, lenis]);
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (

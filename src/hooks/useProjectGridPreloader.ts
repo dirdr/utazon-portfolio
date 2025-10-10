@@ -33,6 +33,19 @@ export const useProjectGridPreloader = (
   const loadingRef = useRef(false);
   const progressUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const getProjectAssets = useCallback((): ProjectAssets => {
+    const assets: ProjectAssets = {
+      coverImage: `/images/projects/${projectId}/cover.webp`,
+      backgroundImage: `/images/projects/${projectId}/background.webp`,
+    };
+
+    if (hasVideo && !isMobile()) {
+      assets.thumbnailVideo = `/videos/projects/${projectId}/thumbnail.webm`;
+    }
+
+    return assets;
+  }, [projectId, hasVideo]);
+
   // Batch progress updates to prevent cascade re-renders
   const updateProgress = useCallback((immediate = false) => {
     if (progressUpdateTimeoutRef.current && !immediate) {
@@ -58,20 +71,7 @@ export const useProjectGridPreloader = (
     } else {
       progressUpdateTimeoutRef.current = setTimeout(updateFn, 16); // Next frame
     }
-  }, [projectId]);
-
-  const getProjectAssets = useCallback((): ProjectAssets => {
-    const assets: ProjectAssets = {
-      coverImage: `/images/projects/${projectId}/cover.webp`,
-      backgroundImage: `/images/projects/${projectId}/background.webp`,
-    };
-
-    if (hasVideo && !isMobile()) {
-      assets.thumbnailVideo = `/videos/projects/${projectId}/thumbnail.webm`;
-    }
-
-    return assets;
-  }, [projectId, hasVideo]);
+  }, [getProjectAssets]);
 
   const preloadImage = useCallback((url: string): Promise<void> => {
     return new Promise((resolve) => {
@@ -145,7 +145,7 @@ export const useProjectGridPreloader = (
     // Final immediate update after all assets complete
     updateProgress(true); // Immediate final update
     loadingRef.current = false;
-  }, [getProjectAssets, preloadImage, preloadVideo]);
+  }, [getProjectAssets, preloadImage, preloadVideo, updateProgress]);
 
   const handleIntersection = useCallback(() => {
     loadProjectAssets();
