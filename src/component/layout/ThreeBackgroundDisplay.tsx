@@ -18,6 +18,7 @@ import {
 import { useLenis } from "lenis/react";
 import { useCanvasComponent } from "../../hooks/useCanvasReadiness";
 import { mouseTracker } from "../../utils/mouseTracker";
+import { useLocation } from "wouter";
 
 interface CameraConfig {
   position: [number, number, number];
@@ -97,14 +98,14 @@ const LIGHT_CONFIG = {
 const CAMERA_CONFIG = {
   BREAKPOINTS: {
     XL: {
-      POSITION: [0, 0, -4] as [number, number, number],
+      POSITION: [0, 0, -4.5] as [number, number, number],
       FOV: 60,
       TARGET: [0, 0, -7.4] as [number, number, number],
     },
     XXL: {
-      POSITION: [0, 0.2, -4.5] as [number, number, number],
+      POSITION: [0, 0, -4.5] as [number, number, number],
       FOV: 55,
-      TARGET: [0, 0.1, -7.4] as [number, number, number],
+      TARGET: [0, 0, -7.4] as [number, number, number],
     },
   },
 } as const;
@@ -201,6 +202,7 @@ function Model({ url, planeOpaque = false }: ModelProps) {
   const scrollY = useScrollOffset();
 
   const logoYOffset = useMemo(() => {
+    if (scrollY === 0) return 0;
     const scrollDivisor = 5;
     const maxOffset = 4.5;
     const scrollFactor = scrollY / (window.innerHeight * scrollDivisor);
@@ -416,6 +418,16 @@ const useDesktopLighting = () => {
 const useScrollOffset = () => {
   const [scrollY, setScrollY] = useState(0);
   const lenis = useLenis();
+  const [location] = useLocation();
+
+  useEffect(() => {
+    setScrollY(0);
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location, lenis]);
 
   useEffect(() => {
     if (lenis) {

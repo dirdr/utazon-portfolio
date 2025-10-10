@@ -4,8 +4,7 @@ import { getRouteAssets, shouldPreloadRoute } from "../config/routeAssets";
 import { useCanvasReadiness } from "./useCanvasReadiness";
 import { isMobile } from "../utils/mobileDetection";
 import { useBackgroundImageStore } from "./useBackgroundImageStore";
-import backgroundImage from "../assets/images/background.webp";
-import backgroundMobileImage from "../assets/images/background_mobile.png";
+import { getBackgroundForRoute } from "../config/routeBackgroundConfig";
 
 const shouldWaitForCanvas = (route: string): boolean => {
   return route === "/about" && !isMobile();
@@ -28,12 +27,6 @@ interface TransitionState {
   fadeInComplete: boolean;
 }
 
-const getBackgroundForRoute = (route: string): string => {
-  if (route === "/projects" || route === "/contact" || route === "/showreel" || route === "/legal") {
-    return isMobile() ? backgroundMobileImage : backgroundImage;
-  }
-  return "";
-};
 
 export const useTransitionRouter = (config: TransitionConfig = {}) => {
   const { duration = 600 } = config;

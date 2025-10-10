@@ -6,20 +6,13 @@ import { useBackgroundImageStore } from '../../hooks/useBackgroundImageStore';
 import { useCanvasReadiness } from '../../hooks/useCanvasReadiness';
 import { getRouteAssets, shouldPreloadRoute } from '../../config/routeAssets';
 import { isMobile } from '../../utils/mobileDetection';
-import backgroundImage from '../../assets/images/background.webp';
-import backgroundMobileImage from '../../assets/images/background_mobile.png';
+import { getBackgroundForRoute } from '../../config/routeBackgroundConfig';
 import { useState, useCallback, useEffect, useRef } from 'react';
 
 const shouldWaitForCanvas = (route: string): boolean => {
   return route === "/about" && !isMobile();
 };
 
-const getBackgroundForRoute = (route: string): string => {
-  if (route === "/projects" || route === "/contact" || route === "/showreel" || route === "/legal") {
-    return isMobile() ? backgroundMobileImage : backgroundImage;
-  }
-  return "";
-};
 
 /**
  * GlobalLoaderWrapper handles the global loading screen for the entire app

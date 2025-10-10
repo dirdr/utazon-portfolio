@@ -21,7 +21,7 @@ export const About = () => {
 
   const scrollToShowreel = () => {
     lenis?.scrollTo('[data-id="showreel-about"]', {
-      offset: -200,
+      offset: 0,
       duration: 1.5,
     });
   };
