@@ -30,6 +30,7 @@ export interface VideoShowcaseData extends ShowcaseItem {
     light?: string | null;
     startTime?: number;
   };
+  aspectRatio?: string;
 }
 
 export interface VideoCarouselShowcaseData extends ShowcaseItem {

@@ -15,14 +15,23 @@ export const VideoShowcase = ({
   className,
   border = false,
 }: VideoShowcaseProps) => {
-  const { video, id } = data;
+  const { video, id, aspectRatio } = data;
   const videoUrl = getVideoUrl(video.src);
+  const isVertical = aspectRatio === "9/16";
 
   return (
-    <div className={cn("w-full", className)} data-id={id}>
+    <div
+      className={cn(
+        "w-full",
+        isVertical && "max-w-2xl mx-auto",
+        className
+      )}
+      data-id={id}
+    >
       <div
         className={cn(
-          "w-full aspect-video overflow-hidden",
+          "w-full overflow-hidden",
+          aspectRatio ? `aspect-[${aspectRatio}]` : "aspect-video",
           border && SHOWCASE_STYLES.borderRadius,
           border && SHOWCASE_STYLES.border,
         )}

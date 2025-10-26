@@ -15,6 +15,7 @@ export const Fooh: Project = {
       type: "video",
       id: "video-1",
       order: 1,
+      aspectRatio: "9/16",
       video: {
         src: "fooh/details1.mp4",
         light: "/images/projects/fooh/cover.webp",
@@ -24,6 +25,7 @@ export const Fooh: Project = {
       type: "video",
       id: "video-2",
       order: 2,
+      aspectRatio: "9/16",
       video: {
         src: "fooh/details2.mp4",
         light: "/images/projects/fooh/cover.webp",
