@@ -1,15 +1,14 @@
-import { writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { writeFileSync } from "fs";
+import { resolve } from "path";
 
 const SITE_URL = process.env.VITE_SITE_URL;
 
 if (!SITE_URL) {
-  console.error('ERROR: VITE_SITE_URL environment variable is required');
+  console.error("ERROR: VITE_SITE_URL environment variable is required");
   process.exit(1);
 }
 
 function generateRobotsTxt() {
-  
   const robotsTxtContent = `# Robots.txt for ${SITE_URL}
 
 User-agent: *
@@ -57,14 +56,14 @@ Crawl-delay: 1
 `;
 
   try {
-    const outputPath = process.env.NODE_ENV === 'production' 
-      ? '/usr/share/nginx/html/seo/robots.txt'
-      : './public/robots.txt';
+    const outputPath =
+      process.env.NODE_ENV === "production"
+        ? "/usr/share/nginx/html/seo/robots.txt"
+        : "./public/robots.txt";
     const resolvedPath = resolve(outputPath);
-    writeFileSync(resolvedPath, robotsTxtContent, 'utf8');
-    
+    writeFileSync(resolvedPath, robotsTxtContent, "utf8");
   } catch (error) {
-    console.error('❌ Error generating robots.txt:', error);
+    console.error("❌ Error generating robots.txt:", error);
     process.exit(1);
   }
 }
@@ -72,6 +71,7 @@ Crawl-delay: 1
 try {
   generateRobotsTxt();
 } catch (error) {
-  console.error('❌ Fatal error:', error);
+  console.error("❌ Fatal error:", error);
   process.exit(1);
 }
+

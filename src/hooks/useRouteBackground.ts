@@ -18,10 +18,13 @@ export const useRouteBackground = () => {
   const getBackgroundForRoute = (path: string): string => {
     const routeBackground = ROUTE_BACKGROUNDS[path];
 
-    // Return empty string for routes that explicitly don't need backgrounds
     if (routeBackground === "") {
-      // For routes that need background images, determine by device type
-      if (path === "/projects" || path === "/contact" || path === "/showreel" || path === "/legal") {
+      if (
+        path === "/projects" ||
+        path === "/contact" ||
+        path === "/showreel" ||
+        path === "/legal"
+      ) {
         return isMobile() ? backgroundMobileImage : backgroundImage;
       }
       return "";
@@ -32,4 +35,3 @@ export const useRouteBackground = () => {
 
   return getBackgroundForRoute(location);
 };
-

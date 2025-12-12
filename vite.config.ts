@@ -20,7 +20,7 @@ export default defineConfig({
           framer: ['framer-motion'],
           ui: ['wouter', 'zustand'],
           i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector', 'i18next-http-backend'],
-          player: ['react-player', 'react-hover-video-player'],
+          player: ['react-player'],
           intersection: ['react-intersection-observer'],
           lenis: ['lenis']
         }

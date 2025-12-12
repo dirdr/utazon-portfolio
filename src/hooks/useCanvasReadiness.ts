@@ -1,4 +1,11 @@
-import { createContext, useContext, useCallback, useState, useRef, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 
 interface CanvasReadinessContextType {
   registerCanvas: (id: string) => void;
@@ -10,22 +17,27 @@ interface CanvasReadinessContextType {
   resetAllCanvases: () => void;
 }
 
-export const CanvasReadinessContext = createContext<CanvasReadinessContextType | null>(null);
+export const CanvasReadinessContext =
+  createContext<CanvasReadinessContextType | null>(null);
 
 export const useCanvasReadiness = () => {
   const context = useContext(CanvasReadinessContext);
   if (!context) {
-    throw new Error('useCanvasReadiness must be used within CanvasReadinessProvider');
+    throw new Error(
+      "useCanvasReadiness must be used within CanvasReadinessProvider",
+    );
   }
   return context;
 };
 
 export const useCanvasReadinessState = () => {
-  const [canvasStates, setCanvasStates] = useState<Map<string, boolean>>(new Map());
+  const [canvasStates, setCanvasStates] = useState<Map<string, boolean>>(
+    new Map(),
+  );
   const listenersRef = useRef<Set<(allReady: boolean) => void>>(new Set());
 
   const notifyListeners = useCallback((allReady: boolean) => {
-    listenersRef.current.forEach(callback => callback(allReady));
+    listenersRef.current.forEach((callback) => callback(allReady));
   }, []);
 
   const resetAllCanvases = useCallback(() => {
@@ -33,64 +45,82 @@ export const useCanvasReadinessState = () => {
     setTimeout(() => notifyListeners(false), 0);
   }, [notifyListeners]);
 
-  const registerCanvas = useCallback((id: string) => {
-    setCanvasStates(prev => {
-      const newMap = new Map(prev);
-      if (!newMap.has(id)) {
-        newMap.set(id, false);
-        setTimeout(() => notifyListeners(false), 0);
-      }
-      return newMap;
-    });
-  }, [notifyListeners]);
+  const registerCanvas = useCallback(
+    (id: string) => {
+      setCanvasStates((prev) => {
+        const newMap = new Map(prev);
+        if (!newMap.has(id)) {
+          newMap.set(id, false);
+          setTimeout(() => notifyListeners(false), 0);
+        }
+        return newMap;
+      });
+    },
+    [notifyListeners],
+  );
 
-  const markCanvasReady = useCallback((id: string) => {
-    setCanvasStates(prev => {
-      const newMap = new Map(prev);
-      const wasReady = newMap.get(id);
+  const markCanvasReady = useCallback(
+    (id: string) => {
+      setCanvasStates((prev) => {
+        const newMap = new Map(prev);
+        const wasReady = newMap.get(id);
 
-      if (!wasReady) {
-        newMap.set(id, true);
-        const allReady = Array.from(newMap.values()).every(Boolean) && newMap.size > 0;
-        setTimeout(() => notifyListeners(allReady), 0);
-      }
+        if (!wasReady) {
+          newMap.set(id, true);
+          const allReady =
+            Array.from(newMap.values()).every(Boolean) && newMap.size > 0;
+          setTimeout(() => notifyListeners(allReady), 0);
+        }
 
-      return newMap;
-    });
-  }, [notifyListeners]);
+        return newMap;
+      });
+    },
+    [notifyListeners],
+  );
 
-  const markCanvasNotReady = useCallback((id: string) => {
-    setCanvasStates(prev => {
-      const newMap = new Map(prev);
-      const wasReady = newMap.get(id);
+  const markCanvasNotReady = useCallback(
+    (id: string) => {
+      setCanvasStates((prev) => {
+        const newMap = new Map(prev);
+        const wasReady = newMap.get(id);
 
-      if (wasReady) {
-        newMap.set(id, false);
-        setTimeout(() => notifyListeners(false), 0);
-      }
+        if (wasReady) {
+          newMap.set(id, false);
+          setTimeout(() => notifyListeners(false), 0);
+        }
 
-      return newMap;
-    });
-  }, [notifyListeners]);
+        return newMap;
+      });
+    },
+    [notifyListeners],
+  );
 
-  const isCanvasReady = useCallback((id: string) => {
-    return canvasStates.get(id) ?? false;
-  }, [canvasStates]);
+  const isCanvasReady = useCallback(
+    (id: string) => {
+      return canvasStates.get(id) ?? false;
+    },
+    [canvasStates],
+  );
 
   const areAllCanvasesReady = useCallback(() => {
-    return Array.from(canvasStates.values()).every(Boolean) && canvasStates.size > 0;
+    return (
+      Array.from(canvasStates.values()).every(Boolean) && canvasStates.size > 0
+    );
   }, [canvasStates]);
 
-  const onCanvasReadyChange = useCallback((callback: (allReady: boolean) => void) => {
-    listenersRef.current.add(callback);
+  const onCanvasReadyChange = useCallback(
+    (callback: (allReady: boolean) => void) => {
+      listenersRef.current.add(callback);
 
-    const currentState = areAllCanvasesReady();
-    callback(currentState);
+      const currentState = areAllCanvasesReady();
+      callback(currentState);
 
-    return () => {
-      listenersRef.current.delete(callback);
-    };
-  }, [areAllCanvasesReady]);
+      return () => {
+        listenersRef.current.delete(callback);
+      };
+    },
+    [areAllCanvasesReady],
+  );
 
   return {
     registerCanvas,
@@ -104,7 +134,8 @@ export const useCanvasReadinessState = () => {
 };
 
 export const useCanvasComponent = (canvasId: string) => {
-  const { registerCanvas, markCanvasReady, markCanvasNotReady } = useCanvasReadiness();
+  const { registerCanvas, markCanvasReady, markCanvasNotReady } =
+    useCanvasReadiness();
   const hasRegistered = useRef(false);
 
   useEffect(() => {
@@ -124,3 +155,4 @@ export const useCanvasComponent = (canvasId: string) => {
 
   return { setReady, setNotReady };
 };
+

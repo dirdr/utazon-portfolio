@@ -42,7 +42,6 @@ function desktopReducer(
   action: DesktopAction,
   isFreshLoad: boolean,
 ): DesktopVideoState {
-
   switch (action.type) {
     case "ASSETS_READY":
       if (isFreshLoad) {

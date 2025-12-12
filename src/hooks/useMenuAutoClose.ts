@@ -1,11 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 interface UseMenuAutoCloseProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const useMenuAutoClose = ({ isOpen, onClose }: UseMenuAutoCloseProps) => {
+export const useMenuAutoClose = ({
+  isOpen,
+  onClose,
+}: UseMenuAutoCloseProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,21 +23,22 @@ export const useMenuAutoClose = ({ isOpen, onClose }: UseMenuAutoCloseProps) => 
     };
 
     const handleEscapeKey = (event: KeyboardEvent) => {
-      if (isOpen && event.key === 'Escape') {
+      if (isOpen && event.key === "Escape") {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleEscapeKey);
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscapeKey);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscapeKey);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isOpen, onClose]);
 
   return menuRef;
 };
+

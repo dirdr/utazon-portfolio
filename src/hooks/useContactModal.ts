@@ -1,6 +1,6 @@
-import React from 'react';
-import { useModal } from '../contexts/ModalContext';
-import { ContactModal } from '../component/common/ContactModal';
+import React from "react";
+import { useModal } from "../contexts/ModalContext";
+import { ContactModal } from "../component/common/ContactModal";
 
 export const useContactModal = () => {
   const { openModal, closeModal } = useModal();
@@ -13,3 +13,4 @@ export const useContactModal = () => {
     openContactModal,
   };
 };
+

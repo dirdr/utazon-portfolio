@@ -19,26 +19,27 @@ export const useImageLoadState = (src: string): ImageLoadState => {
     if (!src) return;
 
     const img = new Image();
-    
+
     const handleLoad = () => {
       setState({ isLoaded: true, hasError: false });
     };
-    
+
     const handleError = () => {
       setState({ isLoaded: false, hasError: true });
     };
 
-    img.addEventListener('load', handleLoad);
-    img.addEventListener('error', handleError);
-    
+    img.addEventListener("load", handleLoad);
+    img.addEventListener("error", handleError);
+
     img.src = src;
 
     // Cleanup
     return () => {
-      img.removeEventListener('load', handleLoad);
-      img.removeEventListener('error', handleError);
+      img.removeEventListener("load", handleLoad);
+      img.removeEventListener("error", handleError);
     };
   }, [src]);
 
   return state;
 };
+

@@ -1,10 +1,3 @@
-/**
- * Modern SPA Navigation Detection Utility
- *
- * Industry-standard solution for detecting SPA navigation vs fresh page loads
- * using the latest web APIs in order of preference.
- */
-
 export interface NavigationInfo {
   isFreshLoad: boolean;
   navigationType: "fresh-load" | "spa-navigation" | "back-forward" | "reload";
@@ -23,10 +16,6 @@ const globalNavigationState = {
   isHydrating: true,
 };
 
-/**
- * Method 1: Modern Navigation API (Chrome 102+, Edge 102+)
- * Most accurate method for detecting navigation types
- */
 const detectWithNavigationAPI = (): NavigationInfo | null => {
   if (!("navigation" in window)) {
     return null;
@@ -233,11 +222,6 @@ export const resetNavigationState = () => {
 };
 
 /**
- * Get current navigation state for debugging
- */
-export const getNavigationState = () => ({ ...globalNavigationState });
-
-/**
  * Initialize navigation detection
  * Call this early in app initialization
  */
@@ -251,4 +235,3 @@ export const initializeNavigationDetection = () => {
     });
   }
 };
-

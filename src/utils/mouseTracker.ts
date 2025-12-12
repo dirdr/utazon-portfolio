@@ -1,4 +1,3 @@
-// Global mouse position tracker for seamless lighting initialization
 class MouseTracker {
   private static instance: MouseTracker;
   private lastX: number = window.innerWidth / 2;
@@ -26,10 +25,9 @@ class MouseTracker {
       this.hasRealPosition = true;
     };
 
-    // Use passive listener for better performance
-    window.addEventListener('mousemove', trackMouse, { passive: true });
+    window.addEventListener("mousemove", trackMouse, { passive: true });
 
-    window.addEventListener('mouseenter', trackMouse, { passive: true });
+    window.addEventListener("mouseenter", trackMouse, { passive: true });
 
     this.initialized = true;
   }
@@ -42,7 +40,6 @@ class MouseTracker {
     return this.hasRealPosition;
   }
 
-  // Get current position immediately using multiple detection methods
   getCurrentPosition(): Promise<{ x: number; y: number }> {
     return new Promise((resolve) => {
       if (this.hasRealPosition) {
@@ -66,7 +63,7 @@ class MouseTracker {
       };
 
       const createDetectionArea = () => {
-        const detector = document.createElement('div');
+        const detector = document.createElement("div");
         detector.style.cssText = `
           position: fixed;
           top: 0;
@@ -78,8 +75,14 @@ class MouseTracker {
           opacity: 0;
         `;
 
-        detector.addEventListener('mouseenter', handleImmediate, { passive: true, once: true });
-        detector.addEventListener('mousemove', handleImmediate, { passive: true, once: true });
+        detector.addEventListener("mouseenter", handleImmediate, {
+          passive: true,
+          once: true,
+        });
+        detector.addEventListener("mousemove", handleImmediate, {
+          passive: true,
+          once: true,
+        });
 
         document.body.appendChild(detector);
 
@@ -88,29 +91,44 @@ class MouseTracker {
         }, 500);
 
         setTimeout(() => {
-          detector.style.pointerEvents = 'auto';
+          detector.style.pointerEvents = "auto";
           setTimeout(() => {
-            detector.style.pointerEvents = 'none';
+            detector.style.pointerEvents = "none";
           }, 50);
         }, 10);
       };
 
-      window.addEventListener('mousemove', handleImmediate, { passive: true, once: true });
-      window.addEventListener('pointermove', handleImmediate, { passive: true, once: true });
-      window.addEventListener('mouseenter', handleImmediate, { passive: true, once: true });
+      window.addEventListener("mousemove", handleImmediate, {
+        passive: true,
+        once: true,
+      });
+      window.addEventListener("pointermove", handleImmediate, {
+        passive: true,
+        once: true,
+      });
+      window.addEventListener("mouseenter", handleImmediate, {
+        passive: true,
+        once: true,
+      });
 
       createDetectionArea();
 
       const tryRealEventCapture = () => {
         const captureHandler = (event: MouseEvent) => {
-          if (event.isTrusted) { // Only respond to real mouse events
+          if (event.isTrusted) {
+            // Only respond to real mouse events
             resolveOnce(event.clientX, event.clientY);
           }
         };
 
-        document.addEventListener('mousemove', captureHandler, { capture: true, once: true });
+        document.addEventListener("mousemove", captureHandler, {
+          capture: true,
+          once: true,
+        });
         setTimeout(() => {
-          document.removeEventListener('mousemove', captureHandler, { capture: true });
+          document.removeEventListener("mousemove", captureHandler, {
+            capture: true,
+          });
         }, 150);
       };
 
@@ -132,3 +150,4 @@ class MouseTracker {
 }
 
 export const mouseTracker = MouseTracker.getInstance();
+

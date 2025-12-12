@@ -87,7 +87,6 @@ const updateIndexHtml = () => {
   );
 
   fs.writeFileSync(indexPath, content, "utf-8");
-
 };
 
 const isMainModule = import.meta.url === `file://${process.argv[1]}`;
@@ -96,4 +95,3 @@ if (isMainModule) {
 }
 
 export { updateIndexHtml };
-

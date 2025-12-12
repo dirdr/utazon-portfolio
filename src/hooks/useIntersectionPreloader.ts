@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface IntersectionPreloaderConfig {
   rootMargin?: string;
@@ -13,39 +13,38 @@ interface IntersectionPreloaderResult {
 }
 
 export const useIntersectionPreloader = (
-  config: IntersectionPreloaderConfig = {}
+  config: IntersectionPreloaderConfig = {},
 ): IntersectionPreloaderResult => {
-  const {
-    rootMargin = '100px',
-    threshold = 0.1,
-    onIntersect,
-  } = config;
+  const { rootMargin = "100px", threshold = 0.1, onIntersect } = config;
 
   const [isIntersecting, setIsIntersecting] = useState(false);
   const isIntersectingRef = useRef(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const elementRef = useRef<HTMLElement | null>(null);
 
-  const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
-    entries.forEach((entry) => {
-      const wasIntersecting = isIntersectingRef.current;
-      const isNowIntersecting = entry.isIntersecting;
+  const handleIntersection = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        const wasIntersecting = isIntersectingRef.current;
+        const isNowIntersecting = entry.isIntersecting;
 
-      isIntersectingRef.current = isNowIntersecting;
+        isIntersectingRef.current = isNowIntersecting;
 
-      // Only trigger state update if intersection status actually changed
-      if (wasIntersecting !== isNowIntersecting) {
-        setIsIntersecting(isNowIntersecting);
-      }
+        // Only trigger state update if intersection status actually changed
+        if (wasIntersecting !== isNowIntersecting) {
+          setIsIntersecting(isNowIntersecting);
+        }
 
-      if (isNowIntersecting && onIntersect) {
-        onIntersect(entry);
-      }
-    });
-  }, [onIntersect]);
+        if (isNowIntersecting && onIntersect) {
+          onIntersect(entry);
+        }
+      });
+    },
+    [onIntersect],
+  );
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
       return;
     }
 
@@ -86,3 +85,4 @@ export const useIntersectionPreloader = (
     isIntersecting,
   };
 };
+

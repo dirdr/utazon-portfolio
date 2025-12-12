@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import { getVideoTransitionConfig } from '../config/videoTransitionConfig';
+import { create } from "zustand";
+import { getVideoTransitionConfig } from "../config/videoTransitionConfig";
 
-export type MuteSource = 'navigation' | 'user';
+export type MuteSource = "navigation" | "user";
 
 interface SoundState {
   isSoundPlaying: boolean;
@@ -17,7 +17,7 @@ interface SoundActions {
 
 export const useSoundStore = create<SoundState & SoundActions>((set, get) => ({
   isSoundPlaying: true,
-  muteSource: 'navigation',
+  muteSource: "navigation",
   videoElement: null,
 
   setVideoElement: (video) => {
@@ -30,22 +30,23 @@ export const useSoundStore = create<SoundState & SoundActions>((set, get) => ({
 
   toggleSound: (newState?: boolean) => {
     const { videoElement } = get();
-    set(state => {
-      const newIsSoundPlaying = newState !== undefined ? newState : !state.isSoundPlaying;
+    set((state) => {
+      const newIsSoundPlaying =
+        newState !== undefined ? newState : !state.isSoundPlaying;
       if (videoElement) {
         videoElement.muted = !newIsSoundPlaying;
       }
       return {
         isSoundPlaying: newIsSoundPlaying,
-        muteSource: 'user'
+        muteSource: "user",
       };
     });
   },
 
   updateForNavigation: (isMobile, isFreshLoad) => {
     const { videoElement, muteSource } = get();
-    
-    if (muteSource === 'user') {
+
+    if (muteSource === "user") {
       return;
     }
 
@@ -60,14 +61,14 @@ export const useSoundStore = create<SoundState & SoundActions>((set, get) => ({
       navigationSoundState = true;
     }
 
-
-    set({ 
+    set({
       isSoundPlaying: navigationSoundState,
-      muteSource: 'navigation'
+      muteSource: "navigation",
     });
 
     if (videoElement) {
       videoElement.muted = !navigationSoundState;
     }
-  }
+  },
 }));
+

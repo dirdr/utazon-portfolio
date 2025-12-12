@@ -1,5 +1,10 @@
 export interface ShowcaseItem {
-  type: "image-single" | "image-grid" | "video" | "video-carousel" | "video-grid";
+  type:
+    | "image-single"
+    | "image-grid"
+    | "video"
+    | "video-carousel"
+    | "video-grid";
   id: string;
   order: number;
 }

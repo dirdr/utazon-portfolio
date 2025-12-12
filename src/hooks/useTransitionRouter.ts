@@ -27,14 +27,13 @@ interface TransitionState {
   fadeInComplete: boolean;
 }
 
-
 export const useTransitionRouter = (config: TransitionConfig = {}) => {
   const { duration = 600 } = config;
   const [location, setLocation] = useLocation();
-  const { areAllCanvasesReady, onCanvasReadyChange, resetAllCanvases } = useCanvasReadiness();
+  const { areAllCanvasesReady, onCanvasReadyChange, resetAllCanvases } =
+    useCanvasReadiness();
   const { setBackgroundImage } = useBackgroundImageStore();
   const canvasReadyUnsubscribeRef = useRef<(() => void) | null>(null);
-
 
   const [state, setState] = useState<TransitionState>({
     isTransitioning: false,
@@ -173,14 +172,21 @@ export const useTransitionRouter = (config: TransitionConfig = {}) => {
 
     setState((prev) => ({ ...prev, progress: 100 }));
 
-
     setState((prev) => ({
       ...prev,
       isTransitioning: false,
       pendingLocation: null,
       fadeInComplete: false,
     }));
-  }, [state.pendingLocation, setLocation, verifyCacheUrls, waitForCanvasReadiness, duration, resetAllCanvases, setBackgroundImage]);
+  }, [
+    state.pendingLocation,
+    setLocation,
+    verifyCacheUrls,
+    waitForCanvasReadiness,
+    duration,
+    resetAllCanvases,
+    setBackgroundImage,
+  ]);
   useEffect(() => {
     return () => {
       if (canvasReadyUnsubscribeRef.current) {
@@ -194,7 +200,6 @@ export const useTransitionRouter = (config: TransitionConfig = {}) => {
       if (newLocation === state.currentLocation) {
         return;
       }
-
 
       setState((prev) => ({
         ...prev,
@@ -228,4 +233,3 @@ export const useTransitionRouter = (config: TransitionConfig = {}) => {
     onFadeInComplete: handleFadeInComplete,
   };
 };
-

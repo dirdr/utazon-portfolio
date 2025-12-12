@@ -7,6 +7,7 @@ import { useImageLoadState } from "./useImageLoadState";
 export const useProjectPageReady = (projectId: string) => {
   const backgroundImageSrc = `/images/projects/${projectId}/background.webp`;
   const { isLoaded } = useImageLoadState(backgroundImageSrc);
-  
+
   return { isReady: isLoaded };
 };
+

@@ -8,17 +8,20 @@ export interface HomeState {
 }
 
 export type HomeAction =
-  | { type: 'PRELOAD_COMPLETE' }
-  | { type: 'DIVE_IN_CLICKED' }
-  | { type: 'VIDEO_STARTED' }
-  | { type: 'SHOW_CONTENT' }
-  | { type: 'RESET_FOR_SPA_NAVIGATION' }
-  | { type: 'SYNC_WITH_APP_LOADING'; payload: {
-      isInitialLoad: boolean;
-      showDiveInButton: boolean;
-      isPreloadComplete: boolean;
-      showContent: boolean;
-    }};
+  | { type: "PRELOAD_COMPLETE" }
+  | { type: "DIVE_IN_CLICKED" }
+  | { type: "VIDEO_STARTED" }
+  | { type: "SHOW_CONTENT" }
+  | { type: "RESET_FOR_SPA_NAVIGATION" }
+  | {
+      type: "SYNC_WITH_APP_LOADING";
+      payload: {
+        isInitialLoad: boolean;
+        showDiveInButton: boolean;
+        isPreloadComplete: boolean;
+        showContent: boolean;
+      };
+    };
 
 export interface HomeContextValue {
   state: HomeState;
@@ -28,3 +31,4 @@ export interface HomeContextValue {
   shouldSkipAnimations: boolean;
   hideDiveInButton: () => void;
 }
+

@@ -1,28 +1,23 @@
 @layer components {
-  /* Hero Header - LineSweepText default styling */
   .HeroHeader {
     @apply font-nord italic text-muted tracking-tight leading-tight;
     @apply text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl;
   }
 
-  /* Page Title - Main page titles */
   .PageTitle {
     @apply font-nord font-bold italic text-white;
     @apply text-xl md:text-2xl 2xl:text-3xl;
   }
 
-  /* Paragraph - Description default styling */
   .paragraph {
     @apply text-gray leading-relaxed;
     @apply text-sm xl:text-base 2xl:text-lg;
   }
 
-  /* Section Title - Uppercase section headers */
   .SectionTitle {
     @apply font-nord text-white uppercase text-sm;
   }
 
-  /* Button Text - Consistent button text sizing */
   .ButtonText {
     @apply text-sm 2xl:text-base;
   }
@@ -79,7 +74,6 @@
     transform: scale(1.2);
   }
 
-  /* Make ReactPlayer videos fill container completely like images */
   .react-player {
     overflow: hidden !important;
     position: relative !important;
@@ -100,7 +94,6 @@
     left: 0 !important;
   }
 
-  /* Target all possible ReactPlayer internal elements */
   .react-player__element,
   .react-player__preview,
   .react-player__shadow {

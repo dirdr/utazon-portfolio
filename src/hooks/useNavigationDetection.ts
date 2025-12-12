@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'wouter';
-import { 
-  detectNavigationType, 
-  trackRouteChange, 
-  markAppHydrated, 
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "wouter";
+import {
+  detectNavigationType,
+  trackRouteChange,
+  markAppHydrated,
   resetNavigationState,
-  NavigationInfo
-} from '../utils/navigationDetection';
+  NavigationInfo,
+} from "../utils/navigationDetection";
 
 interface NavigationState {
   isFreshLoad: boolean;
-  navigationType: NavigationInfo['navigationType'];
-  detectionMethod: NavigationInfo['method'];
+  navigationType: NavigationInfo["navigationType"];
+  detectionMethod: NavigationInfo["method"];
   isInitialRender: boolean;
 }
 
@@ -21,17 +21,19 @@ interface NavigationState {
  */
 export const useNavigationDetection = () => {
   const [location] = useLocation();
-  const [navigationState, setNavigationState] = useState<NavigationState>(() => {
-    // Initial detection on first render
-    const detection = detectNavigationType();
-    
-    return {
-      isFreshLoad: detection.isFreshLoad,
-      navigationType: detection.navigationType,
-      detectionMethod: detection.method,
-      isInitialRender: true
-    };
-  });
+  const [navigationState, setNavigationState] = useState<NavigationState>(
+    () => {
+      // Initial detection on first render
+      const detection = detectNavigationType();
+
+      return {
+        isFreshLoad: detection.isFreshLoad,
+        navigationType: detection.navigationType,
+        detectionMethod: detection.method,
+        isInitialRender: true,
+      };
+    },
+  );
 
   const previousLocation = useRef<string>(location);
   const isHydrated = useRef(false);
@@ -46,20 +48,19 @@ export const useNavigationDetection = () => {
 
   useEffect(() => {
     const isLocationChange = previousLocation.current !== location;
-    
+
     if (!hasDetectedInitialNavigation.current) {
       trackRouteChange(location, true);
       hasDetectedInitialNavigation.current = true;
     } else if (isLocationChange) {
-      
       trackRouteChange(location, false);
-      
-      setNavigationState(prevState => ({
+
+      setNavigationState((prevState) => ({
         ...prevState,
         isFreshLoad: false,
-        navigationType: 'spa-navigation',
-        detectionMethod: 'navigation-api',
-        isInitialRender: false
+        navigationType: "spa-navigation",
+        detectionMethod: "navigation-api",
+        isInitialRender: false,
       }));
     }
 
@@ -69,10 +70,10 @@ export const useNavigationDetection = () => {
   // Method to reset navigation state (call after successful navigation workflow)
   const resetNavigation = () => {
     resetNavigationState();
-    setNavigationState(prevState => ({
+    setNavigationState((prevState) => ({
       ...prevState,
       isFreshLoad: false,
-      isInitialRender: false
+      isInitialRender: false,
     }));
   };
 
@@ -83,7 +84,7 @@ export const useNavigationDetection = () => {
       isFreshLoad: detection.isFreshLoad,
       navigationType: detection.navigationType,
       detectionMethod: detection.method,
-      isInitialRender: false
+      isInitialRender: false,
     });
   };
 
@@ -92,9 +93,11 @@ export const useNavigationDetection = () => {
     resetNavigation,
     redetectNavigation,
     // Convenience properties
-    isSPANavigation: !navigationState.isFreshLoad && !navigationState.isInitialRender,
-    isPageReload: navigationState.navigationType === 'reload',
-    isBackForward: navigationState.navigationType === 'back-forward',
-    currentLocation: location
+    isSPANavigation:
+      !navigationState.isFreshLoad && !navigationState.isInitialRender,
+    isPageReload: navigationState.navigationType === "reload",
+    isBackForward: navigationState.navigationType === "back-forward",
+    currentLocation: location,
   };
 };
+

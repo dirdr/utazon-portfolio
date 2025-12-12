@@ -65,14 +65,14 @@ export const useAppInitialization = () => {
 
       const timer = setTimeout(() => {
         setIsAppInitialized(true);
-        
+
         if (isHomePage) {
           setShowDiveInButton(true);
         }
 
         setTimeout(() => {
           setShowLoader(false);
-          
+
           if (!isHomePage) {
             navigation.resetNavigation();
             isDiveInActive = false;

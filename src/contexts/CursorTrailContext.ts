@@ -10,4 +10,3 @@ export interface CursorTrailContextValue {
 export const CursorTrailContext = createContext<CursorTrailContextValue | null>(
   null,
 );
-

@@ -19,4 +19,3 @@ export const useProjectBackground = (project: Project | null) => {
     };
   }, [project, setBackgroundImage]);
 };
-

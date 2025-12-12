@@ -14,4 +14,3 @@ export const OVERLAY_Z_INDEX = {
   GLOBAL_LOADER: 4500,
   TOOLTIP: 5000,
 } as const;
-

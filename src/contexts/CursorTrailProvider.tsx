@@ -1,11 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { CursorTrailContext, type CursorTrailContextValue } from './CursorTrailContext';
+import React, { useState, useCallback } from "react";
+import {
+  CursorTrailContext,
+  type CursorTrailContextValue,
+} from "./CursorTrailContext";
 
 interface CursorTrailProviderProps {
   children: React.ReactNode;
 }
 
-export const CursorTrailProvider: React.FC<CursorTrailProviderProps> = ({ children }) => {
+export const CursorTrailProvider: React.FC<CursorTrailProviderProps> = ({
+  children,
+}) => {
   const [isEnabled, setIsEnabled] = useState(false);
 
   const enableTrail = useCallback(() => {
@@ -33,3 +38,4 @@ export const CursorTrailProvider: React.FC<CursorTrailProviderProps> = ({ childr
     </CursorTrailContext.Provider>
   );
 };
+

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'wouter';
+import { useState, useEffect, useCallback } from "react";
+import { useLocation } from "wouter";
 
 interface PageTransitionConfig {
   transitionDuration?: number;
@@ -19,10 +19,7 @@ interface PageTransitionState {
  * Provides smooth transitions between all pages in the SPA
  */
 export const usePageTransition = (config: PageTransitionConfig = {}) => {
-  const {
-    transitionDuration = 600,
-    cacheVerificationUrls = [],
-  } = config;
+  const { transitionDuration = 600, cacheVerificationUrls = [] } = config;
 
   const [location] = useLocation();
   const [state, setState] = useState<PageTransitionState>({
@@ -33,64 +30,62 @@ export const usePageTransition = (config: PageTransitionConfig = {}) => {
     previousPage: null,
   });
 
-
   // Cache verification function
-  const verifyCacheUrls = useCallback(
-    (urls: string[]): Promise<void> => {
-      if (urls.length === 0) return Promise.resolve();
+  const verifyCacheUrls = useCallback((urls: string[]): Promise<void> => {
+    if (urls.length === 0) return Promise.resolve();
 
-      return new Promise((resolve) => {
-        let completedCount = 0;
-        const totalCount = urls.length;
+    return new Promise((resolve) => {
+      let completedCount = 0;
+      const totalCount = urls.length;
 
-        const updateProgress = () => {
-          const progress = (completedCount / totalCount) * 100;
-          setState(prev => ({ ...prev, progress: progress * 0.8 + 20 })); // 20-100% range
-        };
+      const updateProgress = () => {
+        const progress = (completedCount / totalCount) * 100;
+        setState((prev) => ({ ...prev, progress: progress * 0.8 + 20 })); // 20-100% range
+      };
 
-        const checkComplete = () => {
-          completedCount++;
-          updateProgress();
-          if (completedCount === totalCount) {
-            resolve();
-          }
-        };
+      const checkComplete = () => {
+        completedCount++;
+        updateProgress();
+        if (completedCount === totalCount) {
+          resolve();
+        }
+      };
 
-        // Safari/Firefox specific cache coordination
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+      // Safari/Firefox specific cache coordination
+      const isSafari = /^((?!chrome|android).)*safari/i.test(
+        navigator.userAgent,
+      );
+      const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
 
-        urls.forEach((url, index) => {
-          const img = new Image();
-          
-          const handleLoad = () => checkComplete();
-          const handleError = () => checkComplete(); // Don't block on errors
+      urls.forEach((url, index) => {
+        const img = new Image();
 
-          img.addEventListener('load', handleLoad);
-          img.addEventListener('error', handleError);
+        const handleLoad = () => checkComplete();
+        const handleError = () => checkComplete(); // Don't block on errors
 
-          if (isSafari || isFirefox) {
-            img.crossOrigin = 'anonymous';
-            // Stagger requests to avoid overwhelming cache
-            setTimeout(() => {
-              img.src = url;
-            }, index * 20);
-          } else {
+        img.addEventListener("load", handleLoad);
+        img.addEventListener("error", handleError);
+
+        if (isSafari || isFirefox) {
+          img.crossOrigin = "anonymous";
+          // Stagger requests to avoid overwhelming cache
+          setTimeout(() => {
             img.src = url;
-          }
-        });
+          }, index * 20);
+        } else {
+          img.src = url;
+        }
       });
-    },
-    []
-  );
+    });
+  }, []);
 
   // Handle page transitions
   useEffect(() => {
     if (location === state.currentPage) return;
 
     // Start transition
-    
-    setState(prev => ({
+
+    setState((prev) => ({
       ...prev,
       isTransitioning: true,
       isPageReady: false,
@@ -100,18 +95,20 @@ export const usePageTransition = (config: PageTransitionConfig = {}) => {
 
     const executeTransition = async () => {
       // Phase 1: Fade in overlay
-      await new Promise(resolve => setTimeout(resolve, transitionDuration / 2));
-      setState(prev => ({ ...prev, progress: 50 }));
-      
+      await new Promise((resolve) =>
+        setTimeout(resolve, transitionDuration / 2),
+      );
+      setState((prev) => ({ ...prev, progress: 50 }));
+
       // Phase 2: Cache verification during overlay
       await verifyCacheUrls(cacheVerificationUrls);
-      setState(prev => ({ ...prev, progress: 100 }));
-      
+      setState((prev) => ({ ...prev, progress: 100 }));
+
       // Phase 3: Small delay then fade out
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Complete transition - starts fade out
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         isTransitioning: false,
         isPageReady: true,
@@ -120,13 +117,19 @@ export const usePageTransition = (config: PageTransitionConfig = {}) => {
     };
 
     executeTransition();
-  }, [location, state.currentPage, cacheVerificationUrls, transitionDuration, verifyCacheUrls]);
+  }, [
+    location,
+    state.currentPage,
+    cacheVerificationUrls,
+    transitionDuration,
+    verifyCacheUrls,
+  ]);
 
   const startManualTransition = useCallback(
     (targetPage: string, urls: string[] = []) => {
       // For programmatic navigation with custom cache verification
       return new Promise<void>((resolve) => {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           isTransitioning: true,
           isPageReady: false,
@@ -135,24 +138,24 @@ export const usePageTransition = (config: PageTransitionConfig = {}) => {
         }));
 
         const executeManualTransition = async () => {
-          setState(prev => ({ ...prev, progress: 20 }));
+          setState((prev) => ({ ...prev, progress: 20 }));
           await verifyCacheUrls(urls);
-          
-          setState(prev => ({
+
+          setState((prev) => ({
             ...prev,
             isTransitioning: false,
             isPageReady: true,
             progress: 100,
             currentPage: targetPage,
           }));
-          
+
           resolve();
         };
 
         executeManualTransition();
       });
     },
-    [verifyCacheUrls]
+    [verifyCacheUrls],
   );
 
   return {
@@ -161,3 +164,4 @@ export const usePageTransition = (config: PageTransitionConfig = {}) => {
     startManualTransition,
   };
 };
+

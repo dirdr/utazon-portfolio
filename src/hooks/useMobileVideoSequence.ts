@@ -38,7 +38,6 @@ function mobileReducer(
   action: MobileAction,
   isFreshLoad: boolean,
 ): MobileVideoState {
-
   switch (action.type) {
     case "ASSETS_READY":
       if (isFreshLoad) {
@@ -182,11 +181,13 @@ export const useMobileVideoSequence = (
       const transitionMethod = videoBackgroundRef?.current?.transitionToVideo;
 
       if (transitionMethod) {
-        transitionMethod(MOBILE_VIDEOS.INTRO).then(() => {
-          dispatch({ type: "ANIM_ENDED" });
-        }).catch(() => {
-          dispatch({ type: "ANIM_ENDED" });
-        });
+        transitionMethod(MOBILE_VIDEOS.INTRO)
+          .then(() => {
+            dispatch({ type: "ANIM_ENDED" });
+          })
+          .catch(() => {
+            dispatch({ type: "ANIM_ENDED" });
+          });
       } else {
         dispatch({ type: "ANIM_ENDED" });
       }

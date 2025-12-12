@@ -13,11 +13,20 @@ export interface VideoWorkflowResult {
   onDiveInClick: () => void;
 }
 
-export const useVideoWorkflow = (getVideoElement: () => HTMLVideoElement | null, videoBackgroundRef?: React.RefObject<VideoBackgroundRef | null>): VideoWorkflowResult => {
+export const useVideoWorkflow = (
+  getVideoElement: () => HTMLVideoElement | null,
+  videoBackgroundRef?: React.RefObject<VideoBackgroundRef | null>,
+): VideoWorkflowResult => {
   const isMobileDetected = isMobile();
-  
-  const desktopResult = useDesktopVideoWorkflow(isMobileDetected ? () => null : getVideoElement, videoBackgroundRef);
-  const mobileResult = useMobileVideoSequence(isMobileDetected ? getVideoElement : () => null, videoBackgroundRef);
+
+  const desktopResult = useDesktopVideoWorkflow(
+    isMobileDetected ? () => null : getVideoElement,
+    videoBackgroundRef,
+  );
+  const mobileResult = useMobileVideoSequence(
+    isMobileDetected ? getVideoElement : () => null,
+    videoBackgroundRef,
+  );
 
   if (isMobileDetected) {
     return {
@@ -27,7 +36,7 @@ export const useVideoWorkflow = (getVideoElement: () => HTMLVideoElement | null,
       isLoading: mobileResult.isLoading,
       onVideoLoaded: mobileResult.onVideoLoaded,
       onVideoEnded: mobileResult.onVideoEnded,
-      onDiveInClick: mobileResult.onDiveInClick
+      onDiveInClick: mobileResult.onDiveInClick,
     };
   } else {
     return {
@@ -37,7 +46,7 @@ export const useVideoWorkflow = (getVideoElement: () => HTMLVideoElement | null,
       isLoading: desktopResult.isLoading,
       onVideoLoaded: desktopResult.onVideoLoaded,
       onVideoEnded: desktopResult.onVideoEnded,
-      onDiveInClick: desktopResult.onDiveInClick
+      onDiveInClick: desktopResult.onDiveInClick,
     };
   }
 };

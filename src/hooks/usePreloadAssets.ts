@@ -8,23 +8,7 @@ import p1 from "../assets/images/card_backgrounds/1.webp";
 import p2 from "../assets/images/card_backgrounds/2.webp";
 import p3 from "../assets/images/card_backgrounds/3.webp";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debugLog = (_message?: string, _data?: unknown) => {
-  return;
-};
-
-// Global cache for preloaded models
 const modelCache = new Map<string, unknown>();
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debugError = (_message?: string, _error?: unknown) => {
-  return;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debugSuccess = (_message?: string, _data?: unknown) => {
-  return;
-};
 
 export interface AssetLoadState {
   url: string;
@@ -57,22 +41,8 @@ export const usePreloadAssets = () => {
   const hasStarted = useRef(false);
 
   const generateAssetsList = useCallback((): AssetLoadState[] => {
-    debugLog("🚀 Starting CRITICAL asset list generation (Phase 1 refactor)");
-
     const isMobileDevice = isMobile();
-
-    debugLog("Environment info:", {
-      userAgent: navigator.userAgent,
-      isMobile: isMobileDevice,
-      cookiesEnabled: navigator.cookieEnabled,
-      onLine: navigator.onLine,
-    });
-
     const assets: AssetLoadState[] = [];
-
-    debugLog(
-      `Adding ${isMobileDevice ? "mobile" : "desktop"} entry and loop videos`,
-    );
 
     if (isMobileDevice) {
       assets.push({
@@ -153,61 +123,25 @@ export const usePreloadAssets = () => {
       type: "model",
     });
 
-    debugLog(`Generated ${assets.length} CRITICAL assets for preloading:`, {
-      videos: assets.filter((a) => a.type === "video").length,
-      images: assets.filter((a) => a.type === "image").length,
-      models: assets.filter((a) => a.type === "model").length,
-      assetsList: assets.map((a) => ({ url: a.url, type: a.type })),
-    });
-
     return assets;
   }, []);
 
   const preloadImage = useCallback((url: string): Promise<void> => {
-    const startTime = Date.now();
-    debugLog(`🖼️ Starting image preload: ${url}`);
-
     return new Promise((resolve, reject) => {
       const img = new Image();
-
-      const isSafari = /^((?!chrome|android).)*safari/i.test(
-        navigator.userAgent,
-      );
-      const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
-
-      debugLog(`Image load config for ${url}:`, {
-        isSafari,
-        isFirefox,
-        decoding: "async",
-        loading: "eager",
-      });
 
       img.decoding = "async";
       img.loading = "eager";
 
       // Set crossOrigin for all images to match preload link behavior
       img.crossOrigin = "anonymous";
-      debugLog(`Set crossOrigin=anonymous for ${url}`);
 
       const handleLoad = () => {
-        const duration = Date.now() - startTime;
-        debugSuccess(`Image loaded successfully: ${url} (${duration}ms)`, {
-          naturalWidth: img.naturalWidth,
-          naturalHeight: img.naturalHeight,
-          complete: img.complete,
-        });
         cleanup();
         resolve();
       };
 
-      const handleError = (event: Event) => {
-        const duration = Date.now() - startTime;
-        debugError(`Image failed to load: ${url} (${duration}ms)`, {
-          event,
-          complete: img.complete,
-          naturalWidth: img.naturalWidth,
-          naturalHeight: img.naturalHeight,
-        });
+      const handleError = () => {
         cleanup();
         reject(new Error(`Failed to load image: ${url}`));
       };
@@ -220,20 +154,10 @@ export const usePreloadAssets = () => {
       img.addEventListener("load", handleLoad);
       img.addEventListener("error", handleError);
 
-      debugLog(`Setting image src: ${url}`);
       img.src = url;
 
       setTimeout(() => {
         if (!img.complete) {
-          const duration = Date.now() - startTime;
-          debugError(
-            `Image preload timeout (10s) for: ${url} (${duration}ms)`,
-            {
-              complete: img.complete,
-              naturalWidth: img.naturalWidth,
-              naturalHeight: img.naturalHeight,
-            },
-          );
           cleanup();
           resolve();
         }
@@ -242,35 +166,21 @@ export const usePreloadAssets = () => {
   }, []);
 
   const preloadVideo = useCallback((url: string): Promise<void> => {
-    const startTime = Date.now();
-    debugLog(`🎥 Starting video preload: ${url}`);
-
     // Check if this is an intro video (should load without timeout)
     const isIntroVideo = url.includes("/videos/intro/");
-    debugLog(`Video ${url} is intro video: ${isIntroVideo}`);
 
     return new Promise((resolve) => {
-      debugLog(`Fetching video HEAD request: ${url}`);
-
       const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
       if (isFirefox) {
-        debugLog(`Firefox detected - using direct video preload for: ${url}`);
         const video = document.createElement("video");
         video.preload = "metadata";
         video.muted = true;
 
         const handleVideoReady = () => {
-          const duration = Date.now() - startTime;
-          debugSuccess(
-            `Firefox direct video preload success: ${url} (${duration}ms)`,
-          );
           resolve();
         };
 
         const handleVideoError = () => {
-          debugError(
-            `Firefox direct video preload failed: ${url}, fallback to fetch`,
-          );
           performFetch();
         };
 
@@ -299,35 +209,12 @@ export const usePreloadAssets = () => {
           cache: "no-cache",
         })
           .then((response) => {
-            const headDuration = Date.now() - startTime;
             const contentType = response.headers.get("content-type");
 
-            debugLog(`Video HEAD response for ${url} (${headDuration}ms):`, {
-              ok: response.ok,
-              status: response.status,
-              statusText: response.statusText,
-              contentType,
-              headers: Object.fromEntries(response.headers.entries()),
-            });
-
             if (!response.ok || !contentType?.includes("video")) {
-              debugError(`Video HEAD check failed for ${url}:`, {
-                ok: response.ok,
-                status: response.status,
-                contentType,
-                reason: !response.ok
-                  ? "Response not ok"
-                  : "Content-type not video",
-              });
               resolve();
               return;
             }
-
-            debugSuccess(
-              `Video HEAD check passed for ${url}, starting video element preload`,
-            );
-
-            const videoStartTime = Date.now();
 
             const video = document.createElement("video");
             let resolved = false;
@@ -335,29 +222,14 @@ export const usePreloadAssets = () => {
             const handleSuccess = () => {
               if (!resolved) {
                 resolved = true;
-                const duration = Date.now() - videoStartTime;
-                debugSuccess(`Video preload success: ${url} (${duration}ms)`, {
-                  duration: video.duration,
-                  readyState: video.readyState,
-                  videoWidth: video.videoWidth,
-                  videoHeight: video.videoHeight,
-                  networkState: video.networkState,
-                });
                 cleanup();
                 resolve();
               }
             };
 
-            const handleError = (event: Event) => {
+            const handleError = () => {
               if (!resolved) {
                 resolved = true;
-                const duration = Date.now() - videoStartTime;
-                debugError(`Video preload error: ${url} (${duration}ms)`, {
-                  event,
-                  error: video.error,
-                  readyState: video.readyState,
-                  networkState: video.networkState,
-                });
                 cleanup();
                 resolve();
               }
@@ -376,15 +248,6 @@ export const usePreloadAssets = () => {
               ? setTimeout(() => {
                   if (!resolved) {
                     resolved = true;
-                    const duration = Date.now() - videoStartTime;
-                    debugError(
-                      `Video preload timeout (15s): ${url} (${duration}ms)`,
-                      {
-                        readyState: video.readyState,
-                        networkState: video.networkState,
-                        duration: video.duration,
-                      },
-                    );
                     cleanup();
                     resolve(); // Don't fail on timeout, just continue
                   }
@@ -395,22 +258,9 @@ export const usePreloadAssets = () => {
             video.addEventListener("error", handleError);
 
             video.muted = true;
-
-            debugLog(`Setting video src: ${url}`, {
-              preload: video.preload,
-              muted: video.muted,
-            });
-
             video.src = url;
           })
-          .catch((error) => {
-            const fetchDuration = Date.now() - startTime;
-            debugError(`Video fetch error for ${url} (${fetchDuration}ms):`, {
-              error,
-              name: error.name,
-              message: error.message,
-              stack: error.stack,
-            });
+          .catch(() => {
             resolve();
           });
       }
@@ -418,14 +268,9 @@ export const usePreloadAssets = () => {
   }, []);
 
   const preloadModel = useCallback((url: string): Promise<void> => {
-    const startTime = Date.now();
-    debugLog(`🎭 Starting 3D model preload: ${url}`);
-
     return new Promise((resolve, reject) => {
       // Check if model is already cached
       if (modelCache.has(url)) {
-        const duration = Date.now() - startTime;
-        debugSuccess(`3D model loaded from cache: ${url} (${duration}ms)`);
         resolve();
         return;
       }
@@ -435,37 +280,18 @@ export const usePreloadAssets = () => {
       loader.load(
         url,
         (gltf) => {
-          const duration = Date.now() - startTime;
           // Cache the loaded model
           modelCache.set(url, gltf);
-          debugSuccess(`3D model loaded successfully: ${url} (${duration}ms)`, {
-            scene: gltf.scene,
-            animations: gltf.animations?.length || 0,
-            materials:
-              (gltf as unknown as { materials?: unknown[] }).materials
-                ?.length || 0,
-          });
           resolve();
         },
-        (progress) => {
-          if (progress.lengthComputable) {
-            const percent = Math.round(
-              (progress.loaded / progress.total) * 100,
-            );
-            debugLog(`3D model loading progress: ${url} - ${percent}%`);
-          }
-        },
-        (error) => {
-          const duration = Date.now() - startTime;
-          debugError(`3D model failed to load: ${url} (${duration}ms)`, error);
+        undefined,
+        () => {
           reject(new Error(`Failed to load 3D model: ${url}`));
         },
       );
 
       // Timeout after 30 seconds for 3D models
       setTimeout(() => {
-        const duration = Date.now() - startTime;
-        debugError(`3D model preload timeout (30s): ${url} (${duration}ms)`);
         resolve(); // Don't fail on timeout, just continue
       }, 30000);
     });
@@ -473,8 +299,6 @@ export const usePreloadAssets = () => {
 
   const updateAssetState = useCallback(
     (url: string, loaded: boolean, error: boolean) => {
-      debugLog(`📊 Asset state update: ${url}`, { loaded, error });
-
       setState((prevState) => {
         const updatedAssets = prevState.assets.map((asset) =>
           asset.url === url ? { ...asset, loaded, error } : asset,
@@ -486,24 +310,6 @@ export const usePreloadAssets = () => {
         const failedCount = updatedAssets.filter((asset) => asset.error).length;
         const progress = (loadedCount + failedCount) / updatedAssets.length;
         const isComplete = progress === 1;
-
-        debugLog(`Progress update: ${Math.round(progress * 100)}%`, {
-          loaded: loadedCount,
-          failed: failedCount,
-          total: updatedAssets.length,
-          isComplete,
-        });
-
-        if (isComplete) {
-          debugSuccess(`🎉 All assets preloaded! Summary:`, {
-            totalAssets: updatedAssets.length,
-            successful: loadedCount,
-            failed: failedCount,
-            failedAssets: updatedAssets
-              .filter((a) => a.error)
-              .map((a) => a.url),
-          });
-        }
 
         return {
           ...prevState,
@@ -520,9 +326,6 @@ export const usePreloadAssets = () => {
 
   const preloadAsset = useCallback(
     async (asset: AssetLoadState) => {
-      const assetStartTime = Date.now();
-      debugLog(`⚡ Starting asset preload: ${asset.type} - ${asset.url}`);
-
       try {
         if (asset.type === "image") {
           await preloadImage(asset.url);
@@ -531,14 +334,8 @@ export const usePreloadAssets = () => {
         } else if (asset.type === "model") {
           await preloadModel(asset.url);
         }
-        const duration = Date.now() - assetStartTime;
-        debugSuccess(
-          `Asset preloaded successfully: ${asset.url} (${duration}ms)`,
-        );
         updateAssetState(asset.url, true, false);
-      } catch (error) {
-        const duration = Date.now() - assetStartTime;
-        debugError(`Asset preload failed: ${asset.url} (${duration}ms)`, error);
+      } catch {
         updateAssetState(asset.url, false, true);
       }
     },
@@ -580,22 +377,13 @@ export const usePreloadAssets = () => {
   const startPreloading = useCallback(async () => {
     // Prevent multiple starts using ref
     if (hasStarted.current) {
-      debugLog("Preloading already started, skipping");
       return;
     }
     hasStarted.current = true;
 
-    const preloadStartTime = Date.now();
-    debugLog(
-      "🚀🚀🚀 STARTING CRITICAL PRELOADING PROCESS (Phase 1 refactor) 🚀🚀🚀",
-    );
-
     const assetsList = generateAssetsList();
-
-    debugLog("Adding resource hints");
     addResourceHints();
 
-    debugLog("Setting initial state");
     setState({
       assets: assetsList,
       totalAssets: assetsList.length,
@@ -605,26 +393,9 @@ export const usePreloadAssets = () => {
       progress: 0,
     });
 
-    debugLog(
-      `🔥 Starting ALL critical assets (${assetsList.length}):`,
-      assetsList.map((a) => a.url),
-    );
-
     // Load all critical assets in parallel - no need for batching with only 5 assets
     const allPromises = assetsList.map((asset) => preloadAsset(asset));
-    const results = await Promise.allSettled(allPromises);
-
-    const totalDuration = Date.now() - preloadStartTime;
-    debugSuccess(
-      `🏁 CRITICAL PRELOADING COMPLETED (${totalDuration}ms total):`,
-      {
-        results: results.map((result, index) => ({
-          url: assetsList[index].url,
-          status: result.status,
-          ...(result.status === "rejected" && { reason: result.reason }),
-        })),
-      },
-    );
+    await Promise.allSettled(allPromises);
   }, [generateAssetsList, preloadAsset, addResourceHints]);
 
   return {

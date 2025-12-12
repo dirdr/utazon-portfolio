@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
-import { useIntersectionPreloader } from './useIntersectionPreloader';
-import { isMobile } from '../utils/mobileDetection';
+import { useCallback, useRef, useState, useEffect } from "react";
+import { useIntersectionPreloader } from "./useIntersectionPreloader";
+import { isMobile } from "../utils/mobileDetection";
 
 interface ProjectAssets {
   coverImage: string;
@@ -23,9 +23,14 @@ interface ProjectGridPreloaderResult {
 }
 
 export const useProjectGridPreloader = (
-  config: ProjectGridPreloaderConfig
+  config: ProjectGridPreloaderConfig,
 ): ProjectGridPreloaderResult => {
-  const { projectId, hasVideo = true, rootMargin = '200px', threshold = 0.1 } = config;
+  const {
+    projectId,
+    hasVideo = true,
+    rootMargin = "200px",
+    threshold = 0.1,
+  } = config;
 
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -47,31 +52,37 @@ export const useProjectGridPreloader = (
   }, [projectId, hasVideo]);
 
   // Batch progress updates to prevent cascade re-renders
-  const updateProgress = useCallback((immediate = false) => {
-    if (progressUpdateTimeoutRef.current && !immediate) {
-      return; // Already scheduled
-    }
-
-    const updateFn = () => {
-      const totalAssets = Object.entries(getProjectAssets()).filter(([, url]) => url).length;
-      const loadedCount = loadedAssetsRef.current.size;
-      const progress = totalAssets > 0 ? Math.min(loadedCount / totalAssets, 1) : 1;
-
-      setLoadProgress(progress);
-
-      if (progress >= 1) {
-        setAssetsLoaded(true);
+  const updateProgress = useCallback(
+    (immediate = false) => {
+      if (progressUpdateTimeoutRef.current && !immediate) {
+        return; // Already scheduled
       }
 
-      progressUpdateTimeoutRef.current = null;
-    };
+      const updateFn = () => {
+        const totalAssets = Object.entries(getProjectAssets()).filter(
+          ([, url]) => url,
+        ).length;
+        const loadedCount = loadedAssetsRef.current.size;
+        const progress =
+          totalAssets > 0 ? Math.min(loadedCount / totalAssets, 1) : 1;
 
-    if (immediate) {
-      updateFn();
-    } else {
-      progressUpdateTimeoutRef.current = setTimeout(updateFn, 16); // Next frame
-    }
-  }, [getProjectAssets]);
+        setLoadProgress(progress);
+
+        if (progress >= 1) {
+          setAssetsLoaded(true);
+        }
+
+        progressUpdateTimeoutRef.current = null;
+      };
+
+      if (immediate) {
+        updateFn();
+      } else {
+        progressUpdateTimeoutRef.current = setTimeout(updateFn, 16); // Next frame
+      }
+    },
+    [getProjectAssets],
+  );
 
   const preloadImage = useCallback((url: string): Promise<void> => {
     return new Promise((resolve) => {
@@ -90,19 +101,19 @@ export const useProjectGridPreloader = (
 
   const preloadVideo = useCallback((url: string): Promise<void> => {
     return new Promise((resolve) => {
-      const video = document.createElement('video');
-      video.preload = 'metadata';
+      const video = document.createElement("video");
+      video.preload = "metadata";
       video.muted = true;
-      
+
       const handleReady = () => {
         loadedAssetsRef.current.add(url);
         video.remove();
         resolve();
       };
-      
-      video.addEventListener('loadedmetadata', handleReady, { once: true });
-      video.addEventListener('error', handleReady, { once: true });
-      
+
+      video.addEventListener("loadedmetadata", handleReady, { once: true });
+      video.addEventListener("error", handleReady, { once: true });
+
       setTimeout(handleReady, 3000);
       video.src = url;
     });
@@ -127,7 +138,7 @@ export const useProjectGridPreloader = (
       if (loadedAssetsRef.current.has(url)) return;
 
       try {
-        if (key === 'thumbnailVideo') {
+        if (key === "thumbnailVideo") {
           await preloadVideo(url);
         } else {
           await preloadImage(url);
@@ -173,3 +184,4 @@ export const useProjectGridPreloader = (
     loadProgress,
   };
 };
+

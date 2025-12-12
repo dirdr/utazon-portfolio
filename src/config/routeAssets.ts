@@ -40,18 +40,12 @@ export const ROUTE_ASSETS: Record<string, RouteAssetConfig> = {
   },
 
   [ROUTES.ABOUT]: {
-    images: [
-      backgroundImage,
-      backgroundMobileImage,
-    ],
+    images: [backgroundImage, backgroundMobileImage],
     priority: "medium",
   },
 
   [ROUTES.LEGAL]: {
-    images: [
-      backgroundImage,
-      backgroundMobileImage,
-    ],
+    images: [backgroundImage, backgroundMobileImage],
     priority: "low",
   },
 };
@@ -67,9 +61,7 @@ export const getDynamicRouteAssets = (
   if (route.startsWith("/projects/") && params.id) {
     const projectId = params.id;
     return {
-      images: [
-        `/images/projects/${projectId}/background.webp`,
-      ],
+      images: [`/images/projects/${projectId}/background.webp`],
       videos: [],
       priority: "high",
     };
@@ -115,4 +107,3 @@ export const shouldPreloadRoute = (route: string): boolean => {
 
   return config?.priority === "high" || config?.priority === "medium";
 };
-

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type BackgroundType = 'image' | 'three';
+export type BackgroundType = "image" | "three";
 
 export interface BackgroundConfig {
   type: BackgroundType;
@@ -16,7 +16,11 @@ interface BackgroundImageStore {
   nextBackground: BackgroundConfig | null;
   isTransitioning: boolean;
   setBackgroundImage: (image: string | null, componentId?: string) => void;
-  setBackground: (config: BackgroundConfig | null, componentId?: string, route?: string) => void;
+  setBackground: (
+    config: BackgroundConfig | null,
+    componentId?: string,
+    route?: string,
+  ) => void;
 }
 
 const activeBackgroundUsers = new Set<string>();
@@ -30,18 +34,22 @@ export const useBackgroundImageStore = create<BackgroundImageStore>(
 
     setBackgroundImage: (image: string | null, componentId = "anonymous") => {
       const config: BackgroundConfig | null = image
-        ? { type: 'image', value: image }
+        ? { type: "image", value: image }
         : null;
 
       get().setBackground(config, componentId);
     },
 
-    setBackground: (config: BackgroundConfig | null, componentId = "anonymous", route?: string) => {
+    setBackground: (
+      config: BackgroundConfig | null,
+      componentId = "anonymous",
+      route?: string,
+    ) => {
       const state = get();
 
       if (config !== null) {
         // Skip Three.js background processing for non-about routes
-        if (config.type === 'three' && route && route !== '/about') {
+        if (config.type === "three" && route && route !== "/about") {
           return;
         }
 
@@ -53,7 +61,8 @@ export const useBackgroundImageStore = create<BackgroundImageStore>(
           clearTimeouts.delete(componentId);
         }
 
-        const isSameBackground = state.currentBackground &&
+        const isSameBackground =
+          state.currentBackground &&
           state.currentBackground.type === config.type &&
           state.currentBackground.value === config.value;
 

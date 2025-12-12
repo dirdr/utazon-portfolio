@@ -41,22 +41,18 @@ const CardComponent = ({
   className,
   glintSpeed = "6s",
 }: CardProps) => {
-
   const { t } = useTranslation();
   const { navigateWithTransition } = useTransitionContext();
   const videoRef = useRef<HTMLVideoElement>(null);
   const elementRef = useRef<HTMLElement | null>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-
-  // Simple state management with logging
   const [videoReady, setVideoReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
   const videoReadyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounce video ready events to prevent triple re-renders
   const loggedSetVideoReady = useCallback((value: boolean) => {
     if (videoReadyTimeoutRef.current) {
       clearTimeout(videoReadyTimeoutRef.current);
@@ -76,7 +72,6 @@ const CardComponent = ({
     setIsTouched(value);
   }, []);
 
-
   const preloader = useProjectGridPreloader({
     projectId: project.id,
     hasVideo: !!thumbnail,
@@ -84,10 +79,7 @@ const CardComponent = ({
     threshold: 0.1,
   });
 
-
-  // Use selective Zustand subscription
   const { setActiveCard, isActiveCard } = useActiveVideoCard(project.id);
-
 
   const randomBackground = useMemo(() => {
     const hash = project.name.split("").reduce((acc, char) => {
@@ -128,14 +120,18 @@ const CardComponent = ({
     }
   }, [thumbnail, videoReady]);
 
-  // Auto-stop video when another card becomes active
   useEffect(() => {
     if (!isActiveCard && videoRef.current && !videoRef.current.paused) {
       stopVideoAnimation();
       loggedSetIsHovered(false);
       loggedSetIsTouched(false);
     }
-  }, [isActiveCard, stopVideoAnimation, loggedSetIsHovered, loggedSetIsTouched]);
+  }, [
+    isActiveCard,
+    stopVideoAnimation,
+    loggedSetIsHovered,
+    loggedSetIsTouched,
+  ]);
 
   const handleMouseEnter = () => {
     if (isMobile()) return;
@@ -151,7 +147,7 @@ const CardComponent = ({
 
   const handleTouchStart = () => {
     loggedSetIsTouched(true);
-    loggedSetIsHovered(true); // Keep this true after touch until another card is active
+    loggedSetIsHovered(true);
     startVideoAnimation();
 
     if (animationTimeoutRef.current) {
@@ -161,7 +157,6 @@ const CardComponent = ({
 
   const handleTouchEnd = () => {
     loggedSetIsTouched(false);
-    // Don't stop video/glint on touch end - let it continue until another card is touched
     if (animationTimeoutRef.current) {
       clearTimeout(animationTimeoutRef.current);
     }
@@ -190,12 +185,13 @@ const CardComponent = ({
     };
   }, []);
 
-  // Simple style object
-  const cardStyle = useMemo(() => ({
-    "--glint-card-speed": glintSpeed
-  }), [glintSpeed]);
+  const cardStyle = useMemo(
+    () => ({
+      "--glint-card-speed": glintSpeed,
+    }),
+    [glintSpeed],
+  );
 
-  // Simple className
   const cardClassName = cn(
     "group glint-card-wrapper cursor-pointer w-full card-item",
     {
@@ -204,7 +200,6 @@ const CardComponent = ({
     className,
   );
 
-  // Event props based on device type
   const eventProps = isMobile()
     ? {
         onTouchStart: handleTouchStart,
@@ -259,7 +254,8 @@ const CardComponent = ({
               "h-full w-full object-cover transition-all duration-300",
               thumbnail &&
                 videoReady &&
-                (isActiveCard && (isHovered || isTouched)) &&
+                isActiveCard &&
+                (isHovered || isTouched) &&
                 "opacity-0",
             )}
             style={{ clipPath: `url(#rounded-diagonal-cut-${project.id})` }}
@@ -272,7 +268,10 @@ const CardComponent = ({
               className={cn(
                 "absolute inset-0 h-full w-full object-cover transition-all duration-300",
                 videoReady
-                  ? cn("opacity-0", (isActiveCard && (isHovered || isTouched)) && "opacity-100")
+                  ? cn(
+                      "opacity-0",
+                      isActiveCard && (isHovered || isTouched) && "opacity-100",
+                    )
                   : "hidden",
               )}
               style={{ clipPath: `url(#rounded-diagonal-cut-${project.id})` }}
@@ -311,7 +310,7 @@ const CardComponent = ({
                 <h3
                   className={cn(
                     "font-nord text-xl font-bold italic mb-1 transition-colors duration-300",
-                    (isActiveCard && isHovered) ? "text-muted" : "text-white",
+                    isActiveCard && isHovered ? "text-muted" : "text-white",
                   )}
                 >
                   <LineSweepText
@@ -352,9 +351,7 @@ const CardComponent = ({
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
 export const Card = memo(CardComponent, (prevProps, nextProps) => {
-  // Custom comparison to avoid re-renders when props haven't meaningfully changed
   return (
     prevProps.image.src === nextProps.image.src &&
     prevProps.project.id === nextProps.project.id &&

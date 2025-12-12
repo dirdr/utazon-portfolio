@@ -27,7 +27,7 @@ export const useAnimationControl = ({
     triggerOnce,
   });
 
-  const totalDelay = delay + (staggerDelay * index);
+  const totalDelay = delay + staggerDelay * index;
 
   useEffect(() => {
     if (inView && !hasTriggered) {
@@ -51,3 +51,4 @@ export const useAnimationControl = ({
     animationDelay: totalDelay,
   };
 };
+
