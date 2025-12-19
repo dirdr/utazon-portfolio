@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState, useEffect } from "react";
 import { useIntersectionPreloader } from "./useIntersectionPreloader";
 import { isMobile } from "../utils/mobileDetection";
+import { useAssetPrefetch } from "../contexts/AssetPrefetchContext";
 
 interface ProjectAssets {
   coverImage: string;
@@ -37,6 +38,8 @@ export const useProjectGridPreloader = (
   const loadedAssetsRef = useRef(new Set<string>());
   const loadingRef = useRef(false);
   const progressUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { prefetchProject } = useAssetPrefetch();
 
   const getProjectAssets = useCallback((): ProjectAssets => {
     const assets: ProjectAssets = {
@@ -153,10 +156,25 @@ export const useProjectGridPreloader = (
 
     await Promise.allSettled(promises);
 
+    // Prefetch presigned URLs for showcase videos (fire-and-forget)
+    prefetchProject(projectId, "low").catch((error) => {
+      console.error(
+        `Failed to prefetch showcase videos for ${projectId}:`,
+        error,
+      );
+    });
+
     // Final immediate update after all assets complete
     updateProgress(true); // Immediate final update
     loadingRef.current = false;
-  }, [getProjectAssets, preloadImage, preloadVideo, updateProgress]);
+  }, [
+    getProjectAssets,
+    preloadImage,
+    preloadVideo,
+    updateProgress,
+    projectId,
+    prefetchProject,
+  ]);
 
   const handleIntersection = useCallback(() => {
     loadProjectAssets();

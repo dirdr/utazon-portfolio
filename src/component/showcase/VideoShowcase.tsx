@@ -2,7 +2,6 @@ import { VideoShowcaseData } from "../../types/showcase";
 import { InteractiveVideoPlayer } from "../common/InteractiveVideoPlayer";
 import { SHOWCASE_STYLES } from "../../constants/showcaseStyles";
 import { cn } from "../../utils/cn";
-import { getVideoUrl } from "../../utils/videoUrl";
 
 interface VideoShowcaseProps {
   data: VideoShowcaseData;
@@ -16,7 +15,6 @@ export const VideoShowcase = ({
   border = false,
 }: VideoShowcaseProps) => {
   const { video, id, aspectRatio } = data;
-  const videoUrl = getVideoUrl(video.src);
   const isVertical = aspectRatio === "9/16";
 
   return (
@@ -37,7 +35,7 @@ export const VideoShowcase = ({
         )}
       >
         <InteractiveVideoPlayer
-          src={videoUrl}
+          src={video.src}
           width="100%"
           height="100%"
           controls={true}

@@ -7,6 +7,7 @@ import { Legal } from "../pages/Legal";
 import { ROUTES } from "../../constants/routes";
 import { Route, Switch } from "wouter";
 import { TransitionProvider } from "../../contexts/TransitionProvider";
+import { AssetPrefetchProvider } from "../../contexts/AssetPrefetchContext";
 import { ModalRoot } from "../common/ModalRoot";
 import { CursorTrail } from "../common/CursorTrail";
 import { useCursorTrail } from "../../hooks/useCursorTrail";
@@ -14,7 +15,7 @@ import { PageTransitionOverlay } from "../layout/PageTransitionOverlay";
 import { useTransitionRouter } from "../../hooks/useTransitionRouter";
 import { isMobile } from "../../utils/mobileDetection";
 
-export const AppRouter = () => {
+const AppRouterContent = () => {
   const { isEnabled } = useCursorTrail();
 
   const {
@@ -70,5 +71,13 @@ export const AppRouter = () => {
         onFadeInComplete={onFadeInComplete}
       />
     </TransitionProvider>
+  );
+};
+
+export const AppRouter = () => {
+  return (
+    <AssetPrefetchProvider>
+      <AppRouterContent />
+    </AssetPrefetchProvider>
   );
 };

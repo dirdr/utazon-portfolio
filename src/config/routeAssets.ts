@@ -1,11 +1,19 @@
 import { ROUTES } from "../constants/routes";
-import { allProjectsSortedByPriority } from "../data/projects";
+import {
+  allProjectsSortedByPriority,
+  getProjectById,
+} from "../data/projects";
 import backgroundImage from "../assets/images/background.webp";
 import backgroundMobileImage from "../assets/images/background_mobile.png";
+import {
+  extractProjectVideoKeys,
+  extractAllProjectsVideoKeys,
+} from "../utils/extractProjectVideoKeys";
 
 export interface RouteAssetConfig {
   images?: string[];
   videos?: string[];
+  videoKeys?: string[]; // Backend video keys requiring presigned URLs
   fonts?: string[];
   priority?: "low" | "medium" | "high";
 }
@@ -36,6 +44,7 @@ export const ROUTE_ASSETS: Record<string, RouteAssetConfig> = {
         .filter((project) => project.hasVideo !== false)
         .map((project) => `/videos/projects/${project.id}/thumbnail.webm`),
     ],
+    videoKeys: extractAllProjectsVideoKeys(allProjectsSortedByPriority),
     priority: "high",
   },
 
@@ -60,9 +69,12 @@ export const getDynamicRouteAssets = (
 ): RouteAssetConfig => {
   if (route.startsWith("/projects/") && params.id) {
     const projectId = params.id;
+    const project = getProjectById(projectId);
+
     return {
       images: [`/images/projects/${projectId}/background.webp`],
       videos: [],
+      videoKeys: project ? extractProjectVideoKeys(project) : [],
       priority: "high",
     };
   }
@@ -106,4 +118,25 @@ export const shouldPreloadRoute = (route: string): boolean => {
   }
 
   return config?.priority === "high" || config?.priority === "medium";
+};
+
+/**
+ * Get video keys (backend videos requiring presigned URLs) for a given route
+ */
+export const getRouteVideoKeys = (
+  route: string,
+  params?: Record<string, string>,
+): string[] => {
+  let config: RouteAssetConfig;
+
+  if (params && Object.keys(params).length > 0) {
+    config = getDynamicRouteAssets(route, params);
+  } else if (route.startsWith("/projects/")) {
+    const projectId = route.split("/projects/")[1];
+    config = getDynamicRouteAssets(route, { id: projectId });
+  } else {
+    config = ROUTE_ASSETS[route] || { images: [] };
+  }
+
+  return config.videoKeys || [];
 };

@@ -1,10 +1,15 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { getRouteAssets, shouldPreloadRoute } from "../config/routeAssets";
+import {
+  getRouteAssets,
+  shouldPreloadRoute,
+  getRouteVideoKeys,
+} from "../config/routeAssets";
 import { useCanvasReadiness } from "./useCanvasReadiness";
 import { isMobile } from "../utils/mobileDetection";
 import { useBackgroundImageStore } from "./useBackgroundImageStore";
 import { getBackgroundForRoute } from "../config/routeBackgroundConfig";
+import { useAssetPrefetch } from "../contexts/AssetPrefetchContext";
 
 const shouldWaitForCanvas = (route: string): boolean => {
   return route === "/about" && !isMobile();
@@ -33,6 +38,7 @@ export const useTransitionRouter = (config: TransitionConfig = {}) => {
   const { areAllCanvasesReady, onCanvasReadyChange, resetAllCanvases } =
     useCanvasReadiness();
   const { setBackgroundImage } = useBackgroundImageStore();
+  const { prefetchVideos } = useAssetPrefetch();
   const canvasReadyUnsubscribeRef = useRef<(() => void) | null>(null);
 
   const [state, setState] = useState<TransitionState>({
@@ -150,6 +156,14 @@ export const useTransitionRouter = (config: TransitionConfig = {}) => {
 
     resetAllCanvases();
 
+    // Prefetch presigned URLs for videos (fire-and-forget, don't block transition)
+    const videoKeys = getRouteVideoKeys(newLocation);
+    if (videoKeys.length > 0) {
+      prefetchVideos(videoKeys, "high").catch((error) => {
+        console.error("Failed to prefetch route videos:", error);
+      });
+    }
+
     if (cacheUrls.length > 0) {
       await verifyCacheUrls(cacheUrls);
     }
@@ -186,6 +200,7 @@ export const useTransitionRouter = (config: TransitionConfig = {}) => {
     duration,
     resetAllCanvases,
     setBackgroundImage,
+    prefetchVideos,
   ]);
   useEffect(() => {
     return () => {

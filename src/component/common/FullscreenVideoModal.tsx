@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import { InteractiveVideoPlayer } from "./InteractiveVideoPlayer";
-import { getVideoUrl } from "../../utils/videoUrl";
 
 // Audio configuration constants following React best practices
 const AUDIO_CONFIG = {
@@ -17,7 +16,6 @@ export const FullscreenVideoModal = ({
   isOpen,
   onClose,
 }: FullscreenVideoModalProps) => {
-  const videoUrl = getVideoUrl("showreel.mp4");
   const [isPlaying, setIsPlaying] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -107,7 +105,7 @@ export const FullscreenVideoModal = ({
       
       <div className="w-full h-full" style={{ touchAction: 'manipulation' }}>
         <InteractiveVideoPlayer
-          src={videoUrl}
+          src="showreel.mp4"
           width="100%"
           height="100%"
           controls

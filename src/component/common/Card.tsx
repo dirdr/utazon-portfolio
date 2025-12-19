@@ -7,6 +7,7 @@ import { useTransitionContext } from "../../hooks/useTransitionContext";
 import { useProjectGridPreloader } from "../../hooks/useProjectGridPreloader";
 import { useActiveVideoCard } from "../../hooks/useActiveVideoCard";
 import { isMobile } from "../../utils/mobileDetection";
+import { usePrefetchOnHover } from "../../hooks/usePrefetchOnHover";
 
 import p1 from "../../assets/images/card_backgrounds/1.webp";
 import p2 from "../../assets/images/card_backgrounds/2.webp";
@@ -81,6 +82,13 @@ const CardComponent = ({
 
   const { setActiveCard, isActiveCard } = useActiveVideoCard(project.id);
 
+  const {
+    onMouseEnter: onPrefetchEnter,
+    onMouseLeave: onPrefetchLeave,
+  } = usePrefetchOnHover(project.id, {
+    enabled: !isMobile(), // Only on desktop
+  });
+
   const randomBackground = useMemo(() => {
     const hash = project.name.split("").reduce((acc, char) => {
       return char.charCodeAt(0) + ((acc << 5) - acc);
@@ -135,12 +143,14 @@ const CardComponent = ({
 
   const handleMouseEnter = () => {
     if (isMobile()) return;
+    onPrefetchEnter(); // Trigger prefetch
     loggedSetIsHovered(true);
     startVideoAnimation();
   };
 
   const handleMouseLeave = () => {
     if (isMobile()) return;
+    onPrefetchLeave(); // Cancel prefetch
     loggedSetIsHovered(false);
     stopVideoAnimation();
   };
