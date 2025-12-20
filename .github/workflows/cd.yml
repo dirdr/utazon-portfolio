@@ -1,13 +1,12 @@
-name: Continuous Deployment
+name: Preview Deployment
 
 on:
   push:
     branches:
       - main
-      - production
 
 jobs:
-  deploy:
+  deploy-preview:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,49 +21,18 @@ jobs:
           node-version: "24"
           cache: "npm"
 
-      - name: Determine deployment environment
-        id: environment
-        run: |
-          if [[ "${{ github.ref_name }}" == "production" ]]; then
-            echo "name=production" >> $GITHUB_OUTPUT
-            echo "site_url=https://utazon.fr" >> $GITHUB_OUTPUT
-            echo "is_production=true" >> $GITHUB_OUTPUT
-            echo "branch=production" >> $GITHUB_OUTPUT
-            echo "Deploying to Production (utazon.fr)"
-          else
-            echo "name=integration" >> $GITHUB_OUTPUT
-            echo "site_url=https://integration.utazon.fr" >> $GITHUB_OUTPUT
-            echo "is_production=false" >> $GITHUB_OUTPUT
-            echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-            echo "Deploying to Integration (integration.utazon.fr) - Branch ${{ github.ref_name }}"
-          fi
-
       - name: Install dependencies
         run: npm ci
 
       - name: Build application
         env:
-          VITE_SITE_URL: ${{ steps.environment.outputs.site_url }}
+          VITE_SITE_URL: https://integration.utazon.fr
           VITE_UTAZON_API_URL: ${{ secrets.VITE_UTAZON_API_URL }}
         run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        id: deploy
+      - name: Deploy to Cloudflare Pages (Preview)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=utazon-portfolio --branch=${{ steps.environment.outputs.branch }} ${{ steps.environment.outputs.is_production == 'true' && '--commit-dirty=true' || '' }}
-
-      - name: Get version for notification
-        if: steps.environment.outputs.is_production == 'true'
-        id: version
-        run: echo "number=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Send Discord notification
-        if: steps.environment.outputs.is_production == 'true'
-        uses: Ilshidur/action-discord@master
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        with:
-          args: "@here Portfolio v${{ steps.version.outputs.number }} deployed to PRODUCTION 🚀 https://utazon.fr"
+          command: pages deploy dist --project-name=utazon-portfolio --branch=main
