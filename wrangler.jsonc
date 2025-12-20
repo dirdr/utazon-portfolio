@@ -1,8 +1,0 @@
-{
-  "name": "utazon-portfolio",
-  "compatibility_date": "2025-12-20",
-  "assets": {
-    "directory": "./dist"
-  },
-  "pages_build_output_dir": "./dist"
-}
