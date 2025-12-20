@@ -1,0 +1,67 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Determine deployment environment
+        id: environment
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "name=production" >> $GITHUB_OUTPUT
+            echo "site_url=https://utazon.fr" >> $GITHUB_OUTPUT
+            echo "is_production=true" >> $GITHUB_OUTPUT
+            echo "Deploying to PRODUCTION"
+          else
+            echo "name=preview" >> $GITHUB_OUTPUT
+            echo "site_url=https://utazon-portfolio.pages.dev" >> $GITHUB_OUTPUT
+            echo "is_production=false" >> $GITHUB_OUTPUT
+            echo "Deploying to PREVIEW"
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        env:
+          VITE_SITE_URL: ${{ steps.environment.outputs.site_url }}
+          VITE_UTAZON_API_URL: ${{ secrets.VITE_UTAZON_API_URL }}
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: utazon-portfolio
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+
+      - name: Send Discord notification
+        if: steps.environment.outputs.is_production == 'true'
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: "@here The portfolio ${{ github.ref_name }} has been deployed to production on Cloudflare Pages 🚀\n\nDeployment URL: ${{ steps.deploy.outputs.url }}"

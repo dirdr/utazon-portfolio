@@ -1,4 +1,9 @@
-name: cd-pipeline
+# LEGACY DEPLOYMENT WORKFLOW
+# This workflow is kept for parallel Docker/SSH deployment during the migration to Cloudflare Pages.
+# Once Cloudflare Pages migration is validated, this workflow can be removed.
+# New deployments should use Cloudflare Pages (see cloudflare-pages.yml workflow)
+
+name: cd-pipeline (Legacy Docker Deployment)
 on:
   workflow_dispatch:
     inputs:
