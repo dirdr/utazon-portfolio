@@ -1,29 +1,24 @@
+import { config } from '../config/environment';
+
+/**
+ * Get base URL (runtime)
+ */
 export const getBaseUrl = (): string => {
-  if (typeof window !== "undefined") {
-    return window.location.origin;
-  }
-
-  if (import.meta.env.VITE_SITE_URL) {
-    return import.meta.env.VITE_SITE_URL;
-  }
-
-  if (import.meta.env.DEV) {
-    return "http://localhost:5173";
-  }
-
-  return "https://utazon.fr";
+  return config.siteUrl;
 };
 
-export const getCanonicalUrl = (path: string = ""): string => {
-  const baseUrl = getBaseUrl();
-  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-  return cleanPath ? `${baseUrl}/${cleanPath}` : baseUrl;
+/**
+ * Get canonical URL for a path
+ */
+export const getCanonicalUrl = (path: string = ''): string => {
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return cleanPath ? `${config.siteUrl}/${cleanPath}` : config.siteUrl;
 };
 
-export const getOgImageUrl = (
-  imagePath: string = "images/og-image.jpg",
-): string => {
-  const baseUrl = getBaseUrl();
-  const cleanPath = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath;
-  return `${baseUrl}/${cleanPath}`;
+/**
+ * Get Open Graph image URL
+ */
+export const getOgImageUrl = (imagePath: string = 'images/og-image.jpg'): string => {
+  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+  return `${config.siteUrl}/${cleanPath}`;
 };

@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
+import { seoPlugin } from "./scripts/seo-plugin";
 
 export default defineConfig({
-  plugins: [tailwindcss(), react()],
+  plugins: [tailwindcss(), react(), seoPlugin()],
   assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.eot'],
   build: {
     chunkSizeWarningLimit: 1000,

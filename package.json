@@ -5,16 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run update-meta && tsc && vite build && npm run generate:sitemap && npm run generate:robots",
-    "build:staging": "VITE_SITE_URL=https://staging.utazon.fr npm run build",
+    "build": "tsc && vite build && npm run seo:generate",
+    "build:integration": "VITE_SITE_URL=https://integration.utazon.fr npm run build",
     "build:production": "VITE_SITE_URL=https://utazon.fr npm run build",
-    "update-meta": "tsx scripts/generate-html-meta.ts",
-    "generate:sitemap": "tsx scripts/generate-sitemap.ts",
-    "generate:robots": "tsx scripts/generate-robots.ts",
+    "seo:generate": "tsx scripts/generate-seo.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
-    "preview": "vite preview",
-    "deploy": "npm run build:production && wrangler pages deploy",
-    "deploy:staging": "npm run build:staging && wrangler pages deploy"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.5",
