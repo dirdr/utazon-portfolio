@@ -22,17 +22,14 @@ async function generateSitemap() {
   const projectRoutes = allProjectsSortedByPriority.map((project) => ({
     url: `/projects/${project.id}`,
     changefreq: "monthly",
-    priority: 0.6,
+    priority: 0.7,
   }));
 
   const routes = [...staticRoutes, ...projectRoutes];
 
   const sitemapStream = new SitemapStream({ hostname: SITE_URL });
-  const outputPath =
-    process.env.NODE_ENV === "production"
-      ? "/usr/share/nginx/html/seo/sitemap.xml"
-      : "./public/sitemap.xml";
-  const writeStream = createWriteStream(resolve(outputPath));
+  const outputPath = resolve("./dist/sitemap.xml");
+  const writeStream = createWriteStream(outputPath);
 
   sitemapStream.pipe(writeStream);
 
@@ -42,13 +39,13 @@ async function generateSitemap() {
         url: route.url,
         changefreq: route.changefreq,
         priority: route.priority,
-        lastmod: new Date().toISOString().split("T")[0], // YYYY-MM-DD format
       });
     });
 
     sitemapStream.end();
 
     await streamToPromise(sitemapStream);
+    console.log("✅ Generated sitemap.xml");
   } catch (error) {
     console.error("❌ Error generating sitemap:", error);
     process.exit(1);

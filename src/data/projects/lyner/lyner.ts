@@ -4,13 +4,14 @@ export const Lyner: Project = {
   id: "lyner",
   title: "projects.lyner.title",
   date: "projects.lyner.date",
-  priority: 3,
+  priority: 5,
   header: "projects.lyner.header",
   description: "projects.lyner.description",
   client: "projects.lyner.client",
   role: "projects.lyner.role",
   hasVideo: true,
   images: [],
+  background: "/images/projects/lyner/background.webp",
   showcases: [
     {
       type: "video",

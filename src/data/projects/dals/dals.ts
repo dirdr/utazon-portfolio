@@ -4,12 +4,13 @@ export const Dals: Project = {
   id: "dals",
   title: "projects.dals.title",
   date: "projects.dals.date",
-  priority: 2,
+  priority: 4,
   header: "projects.dals.header",
   description: "projects.dals.description",
   client: "projects.dals.client",
   role: "projects.dals.role",
   hasVideo: true,
+  background: "/images/projects/dals/background.webp",
   showcases: [
     {
       type: "video-carousel",

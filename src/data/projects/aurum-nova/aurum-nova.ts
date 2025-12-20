@@ -4,13 +4,14 @@ export const AurumNova: Project = {
   id: "aurum-nova",
   title: "projects.aurum-nova.title",
   date: "projects.aurum-nova.date",
-  priority: 1,
+  priority: 3,
   header: "projects.aurum-nova.header",
   description: "projects.aurum-nova.description",
   client: "projects.aurum-nova.client",
   role: "projects.aurum-nova.role",
   hasVideo: true,
   images: [],
+  background: "/images/projects/aurum-nova/background.webp",
   showcases: [
     {
       type: "video",

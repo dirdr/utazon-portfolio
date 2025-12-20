@@ -5,6 +5,7 @@ import { SingleImageShowcase } from "./SingleImageShowcase";
 import { VideoShowcase } from "./VideoShowcase";
 import { VideoCarouselShowcase } from "./VideoCarouselShowcase";
 import { VideoGridShowcase } from "./VideoGridShowcase";
+import { MixedGrid2x2Showcase } from "./MixedGrid2x2Showcase";
 import { Container } from "../layout/Container";
 
 interface ShowcaseRendererProps {
@@ -29,6 +30,9 @@ export const ShowcaseRenderer = ({ showcase }: ShowcaseRendererProps) => {
 
       case "video-grid":
         return <VideoGridShowcase data={showcase} border={true} />;
+
+      case "mixed-grid-2x2":
+        return <MixedGrid2x2Showcase data={showcase} border={true} />;
 
       default:
         return null;

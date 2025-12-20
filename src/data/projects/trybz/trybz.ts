@@ -4,12 +4,13 @@ export const Trybz: Project = {
   id: "trybz",
   title: "projects.trybz.title",
   date: "projects.trybz.date",
-  priority: 15,
+  priority: 17,
   header: "projects.trybz.header",
   description: "projects.trybz.description",
   client: "projects.trybz.client",
   role: "projects.trybz.role",
   hasVideo: false,
+  background: "/images/projects/trybz/background.webp",
   showcases: [
     {
       type: "image-single",

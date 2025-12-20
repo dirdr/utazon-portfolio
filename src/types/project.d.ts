@@ -18,5 +18,6 @@ export interface Project {
   links?: {
     live?: string;
   };
+  background?: string;
   showcases?: ShowcaseData[];
 }

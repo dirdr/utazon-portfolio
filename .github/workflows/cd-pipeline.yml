@@ -2,10 +2,26 @@ name: cd-pipeline
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: "semver"
+      version_type:
+        description: "Version specification method"
         required: true
+        type: choice
+        default: "exact"
+        options:
+          - exact
+          - bump
+      version:
+        description: "Exact version (e.g., 1.1.7) - used when version_type is 'exact'"
+        required: false
         type: string
+      bump_type:
+        description: "Version bump type - used when version_type is 'bump'"
+        required: false
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
       environment:
         description: "Deployment environment"
         required: true
@@ -20,6 +36,57 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+
+      - name: Determine version to deploy
+        id: version
+        run: |
+          VERSION_TYPE="${{ github.event.inputs.version_type }}"
+
+          if [ "$VERSION_TYPE" = "exact" ]; then
+            DEPLOY_VERSION="${{ github.event.inputs.version }}"
+            if [ -z "$DEPLOY_VERSION" ]; then
+              echo "Error: version must be specified when version_type is 'exact'"
+              exit 1
+            fi
+            echo "Using exact version: $DEPLOY_VERSION"
+          elif [ "$VERSION_TYPE" = "bump" ]; then
+            BUMP_TYPE="${{ github.event.inputs.bump_type }}"
+            if [ -z "$BUMP_TYPE" ]; then
+              echo "Error: bump_type must be specified when version_type is 'bump'"
+              exit 1
+            fi
+
+            # Get current version from package.json
+            CURRENT_VERSION=$(node -p "require('./package.json').version")
+            echo "Current version: $CURRENT_VERSION"
+
+            # Parse version into major, minor, patch
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+
+            # Bump version based on input
+            if [ "$BUMP_TYPE" = "major" ]; then
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+            elif [ "$BUMP_TYPE" = "minor" ]; then
+              MINOR=$((MINOR + 1))
+              PATCH=0
+            elif [ "$BUMP_TYPE" = "patch" ]; then
+              PATCH=$((PATCH + 1))
+            else
+              echo "Invalid bump type: $BUMP_TYPE"
+              exit 1
+            fi
+
+            DEPLOY_VERSION="$MAJOR.$MINOR.$PATCH"
+            echo "Calculated version from bump ($BUMP_TYPE): $DEPLOY_VERSION"
+          else
+            echo "Invalid version_type: $VERSION_TYPE"
+            exit 1
+          fi
+
+          echo "version=$DEPLOY_VERSION" >> $GITHUB_OUTPUT
+          echo "Final deployment version: $DEPLOY_VERSION"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -38,7 +105,7 @@ jobs:
             echo "🚀 Deploying"
             echo "SSH connection successful!"
 
-            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${{ steps.version.outputs.version }}"
             ENVIRONMENT="${{ github.event.inputs.environment }}"
             DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
             APP_NAME="${{ vars.APP_NAME }}"
@@ -103,9 +170,6 @@ jobs:
 
             docker-compose pull
 
-            echo "🗺️  Generating sitemap and robots.txt..."
-            docker-compose --profile init up utazon-sitemap-$ENVIRONMENT utazon-robots-$ENVIRONMENT
-
             echo "🛑 Stopping existing containers..."
             docker-compose down utazon-$ENVIRONMENT || true
 
@@ -145,9 +209,40 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Get deployed version
+        id: deployed_version
+        run: |
+          VERSION_TYPE="${{ github.event.inputs.version_type }}"
+
+          if [ "$VERSION_TYPE" = "exact" ]; then
+            DEPLOYED_VERSION="${{ github.event.inputs.version }}"
+          elif [ "$VERSION_TYPE" = "bump" ]; then
+            BUMP_TYPE="${{ github.event.inputs.bump_type }}"
+            CURRENT_VERSION=$(node -p "require('./package.json').version")
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+
+            if [ "$BUMP_TYPE" = "major" ]; then
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+            elif [ "$BUMP_TYPE" = "minor" ]; then
+              MINOR=$((MINOR + 1))
+              PATCH=0
+            elif [ "$BUMP_TYPE" = "patch" ]; then
+              PATCH=$((PATCH + 1))
+            fi
+
+            DEPLOYED_VERSION="$MAJOR.$MINOR.$PATCH"
+          fi
+
+          echo "version=$DEPLOYED_VERSION" >> $GITHUB_OUTPUT
+
       - name: Send discord notification
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          args: "@here The portfolio, with version ${{ github.event.inputs.version }} has been deployed to ${{ github.event.inputs.environment }}"
+          args: "@here The portfolio, with version ${{ steps.deployed_version.outputs.version }} has been deployed to ${{ github.event.inputs.environment }}"

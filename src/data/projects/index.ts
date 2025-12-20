@@ -14,6 +14,8 @@ import { Dals } from "./dals/dals";
 import { Yassencore } from "./yassencore/yassencore";
 import { PixelBreak } from "./pixel-break/pixel-break";
 import { Trybz } from "./trybz/trybz";
+import { NmaSnake } from "./nma-snake/nma-snake";
+import { NmaKatseye } from "./nma-katseye/nma-katseye";
 
 const allProjects: Project[] = [
   AurumNova,
@@ -31,6 +33,8 @@ const allProjects: Project[] = [
   Yassencore,
   PixelBreak,
   Trybz,
+  NmaSnake,
+  NmaKatseye,
 ];
 
 export const allProjectsSortedByPriority: Project[] = allProjects

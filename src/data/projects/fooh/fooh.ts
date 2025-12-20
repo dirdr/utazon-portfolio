@@ -4,12 +4,13 @@ export const Fooh: Project = {
   id: "fooh",
   title: "projects.fooh.title",
   date: "projects.fooh.date",
-  priority: 12,
+  priority: 14,
   header: "projects.fooh.header",
   description: "projects.fooh.description",
   client: "projects.fooh.client",
   role: "projects.fooh.role",
   hasVideo: true,
+  background: "/images/projects/fooh/background.webp",
   showcases: [
     {
       type: "video",

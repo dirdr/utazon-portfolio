@@ -4,13 +4,14 @@ export const KarminCorpLecReveal: Project = {
   id: "karmin-corp-lec-reveal",
   title: "projects.karmin-corp-lec-reveal.title",
   date: "projects.karmin-corp-lec-reveal.date",
-  priority: 8,
+  priority: 10,
   header: "projects.karmin-corp-lec-reveal.header",
   description: "projects.karmin-corp-lec-reveal.description",
   client: "projects.karmin-corp-lec-reveal.client",
   role: "projects.karmin-corp-lec-reveal.role",
   hasVideo: true,
   images: [],
+  background: "/images/projects/karmin-corp-lec-reveal/background.webp",
   showcases: [
     {
       type: "video",

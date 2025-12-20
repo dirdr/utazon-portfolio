@@ -158,10 +158,26 @@
     "trybz": {
       "title": "TRYBZ",
       "header": "Visualisation 3D",
-      "description": "Création d’un stand pour une marque de boisson, TRYBZ, présenté lors de l’anniversaire d’Adil Rami",
+      "description": "Création d'un stand pour une marque de boisson, TRYBZ, présenté lors de l'anniversaire d'Adil Rami",
       "role": "3D Modeling",
       "client": "Blackmotion",
       "date": "2024"
+    },
+    "nma-snake": {
+      "title": "DJ SNAKE & BIPOLAR SUNSHINE",
+      "header": "VISUELS DE SCÈNE 3D",
+      "description": "Création Cinema4D pour la performance live de DJ Snake et Bipolar Sunshine aux NRJ MUSIC AWARDS 2025. Une direction artistique immersive alignée avec l'univers du titre \"Paradise\", diffusée en plateau pendant l'événement.",
+      "role": "Création 3D",
+      "client": "NRJ",
+      "date": "2025"
+    },
+    "nma-katseye": {
+      "title": "KATSEYE",
+      "header": "VISUELS DE SCÈNE 3D",
+      "description": "Création Unreal Engine 5 pour la performance live du groupe Katseye aux NRJ MUSIC AWARDS 2025. Une scène complète créée pour immerger le public dans l'univers de la musique \"Gabriela\", en accord avec le thème et le rythme du show.",
+      "role": "Création 3D",
+      "client": "NRJ",
+      "date": "2025"
     }
   },
   "footer": {

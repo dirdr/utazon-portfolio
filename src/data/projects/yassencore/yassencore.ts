@@ -4,13 +4,14 @@ export const Yassencore: Project = {
   id: "yassencore",
   title: "projects.yassencore.title",
   date: "projects.yassencore.date",
-  priority: 5,
+  priority: 7,
   header: "projects.yassencore.header",
   description: "projects.yassencore.description",
   client: "projects.yassencore.client",
   role: "projects.yassencore.role",
   hasVideo: true,
   images: [],
+  background: "/images/projects/yassencore/background.webp",
   showcases: [
     {
       type: "video",

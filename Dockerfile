@@ -23,27 +23,3 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
-
-FROM node:22-alpine as sitemap-generator
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY scripts/ ./scripts/
-COPY src/ ./src/
-
-CMD ["npm", "run", "sitemap:docker"]
-
-FROM node:22-alpine as robots-generator
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY scripts/ ./scripts/
-COPY src/ ./src/
-
-CMD ["npm", "run", "robots:docker"]

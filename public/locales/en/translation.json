@@ -163,6 +163,22 @@
       "role": "3D Modeling",
       "client": "Blackmotion",
       "date": "2024"
+    },
+    "nma-snake": {
+      "title": "DJ SNAKE & BIPOLAR SUNSHINE",
+      "header": "3D STAGE VISUALS",
+      "description": "Cinema4D creation for DJ Snake and Bipolar Sunshine's live performance at the NRJ MUSIC AWARDS 2025. An immersive artistic direction aligned with the universe of the track \"Paradise\", broadcast on set during the event.",
+      "role": "3D Creation",
+      "client": "NRJ",
+      "date": "2025"
+    },
+    "nma-katseye": {
+      "title": "KATSEYE",
+      "header": "3D STAGE VISUALS",
+      "description": "Unreal Engine 5 creation for the Katseye group's live performance at the NRJ MUSIC AWARDS 2025. A complete scene created to immerse the audience in the universe of the music \"Gabriela\", in harmony with the theme and rhythm of the show.",
+      "role": "3D Creation",
+      "client": "NRJ",
+      "date": "2025"
     }
   },
   "footer": {

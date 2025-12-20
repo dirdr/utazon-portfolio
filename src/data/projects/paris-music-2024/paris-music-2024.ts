@@ -4,13 +4,14 @@ export const ParisMusic2024: Project = {
   id: "paris-music-2024",
   title: "projects.paris-music-2024.title",
   date: "projects.paris-music-2024.date",
-  priority: 7,
+  priority: 9,
   header: "projects.paris-music-2024.header",
   description: "projects.paris-music-2024.description",
   client: "projects.paris-music-2024.client",
   role: "projects.paris-music-2024.role",
   hasVideo: true,
   images: [],
+  background: "/images/projects/paris-music-2024/background.webp",
   showcases: [
     {
       type: "video",

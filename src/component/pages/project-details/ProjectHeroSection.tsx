@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Project } from "../../../types/project";
+import { getProjectBackgroundPath } from "../../../utils/projectBackground";
 import { BackButton } from "../../common/BackButton";
 import { Container } from "../../layout/Container";
 interface GradientConfig {
@@ -27,7 +28,7 @@ export const ProjectHeroSection = ({ project }: ProjectHeroSectionProps) => {
         <div
           className="relative h-[50vh] overflow-hidden bg-cover bg-center sm:bg-left bg-no-repeat"
           style={{
-            backgroundImage: `url(/images/projects/${project.id}/background.webp)`,
+            backgroundImage: `url(${getProjectBackgroundPath(project)})`,
           }}
         >
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black to-transparent pointer-events-none" />
@@ -77,7 +78,7 @@ export const ProjectHeroSection = ({ project }: ProjectHeroSectionProps) => {
           <div
             className="absolute inset-0 bg-cover bg-center md:bg-left bg-no-repeat"
             style={{
-              backgroundImage: `url(/images/projects/${project.id}/background.webp)`,
+              backgroundImage: `url(${getProjectBackgroundPath(project)})`,
             }}
           />
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black to-transparent" />

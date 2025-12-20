@@ -4,7 +4,8 @@ export interface ShowcaseItem {
     | "image-grid"
     | "video"
     | "video-carousel"
-    | "video-grid";
+    | "video-grid"
+    | "mixed-grid-2x2";
   id: string;
   order: number;
 }
@@ -59,9 +60,26 @@ export interface VideoGridShowcaseData extends ShowcaseItem {
   };
 }
 
+export interface MixedGrid2x2ShowcaseData extends ShowcaseItem {
+  type: "mixed-grid-2x2";
+  video: {
+    src: string;
+    title?: string;
+    light?: string | null;
+    startTime?: number;
+  };
+  images: {
+    src: string;
+    alt: string;
+    caption?: string;
+  }[];
+  aspectRatio?: string;
+}
+
 export type ShowcaseData =
   | SingleImageShowcaseData
   | GridImagesShowcaseData
   | VideoShowcaseData
   | VideoCarouselShowcaseData
-  | VideoGridShowcaseData;
+  | VideoGridShowcaseData
+  | MixedGrid2x2ShowcaseData;
