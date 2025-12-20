@@ -22,17 +22,31 @@ export const MixedGrid2x2Showcase = ({
   const [videoReady, setVideoReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
 
-  // Fetch presigned URL for backend videos
   const { url: videoUrl, loading: urlLoading } = usePresignedVideoUrl(
     video.src,
   );
 
   useEffect(() => {
-    if (videoReady && videoRef.current) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {});
+    if (videoRef.current) {
+      const videoEl = videoRef.current;
+
+      const tryPlay = async () => {
+        try {
+          await videoEl.play();
+        } catch (err) {
+          console.log("Video autoplay failed:", err);
+        }
+      };
+
+      if (videoReady) {
+        tryPlay();
       }
+
+      const retryTimeout = setTimeout(() => {
+        if (videoEl.paused) tryPlay();
+      }, 500);
+
+      return () => clearTimeout(retryTimeout);
     }
   }, [videoReady]);
 
