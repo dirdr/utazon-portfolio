@@ -16,6 +16,10 @@ dist-ssr
 .env
 
 .claude
+
+# Wrangler
+.wrangler/
+wrangler.toml
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

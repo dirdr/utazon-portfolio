@@ -1,0 +1,58 @@
+# Cache and CORS headers for static assets
+
+# Font files
+/*.woff
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000
+
+/*.woff2
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000
+
+/*.ttf
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000
+
+/*.eot
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000
+
+# Static assets (js, css, images)
+/*.js
+  Cache-Control: public, max-age=31536000
+
+/*.css
+  Cache-Control: public, max-age=31536000
+
+/*.png
+  Cache-Control: public, max-age=31536000
+
+/*.jpg
+  Cache-Control: public, max-age=31536000
+
+/*.jpeg
+  Cache-Control: public, max-age=31536000
+
+/*.gif
+  Cache-Control: public, max-age=31536000
+
+/*.ico
+  Cache-Control: public, max-age=31536000
+
+/*.svg
+  Cache-Control: public, max-age=31536000
+
+# Video files with CORS
+/*.webm
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Allow-Headers: Range, Content-Type
+  Cache-Control: public, max-age=31536000
+  Accept-Ranges: bytes
+
+/*.mp4
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Allow-Headers: Range, Content-Type
+  Cache-Control: public, max-age=31536000
+  Accept-Ranges: bytes
