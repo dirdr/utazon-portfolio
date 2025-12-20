@@ -1,11 +1,9 @@
 # Utazon Portfolio
 
-Portfolio built with React 19, Three.js, and Tailwind CSS.
-Two environment are served 
-1. [production](https://utazon.fr)
-2. [staging](https://staging.utazon.fr)
+[utazon](https://utazon.fr) Portfolio, presenting it's work.
 
-Videos and Contact form are handled by a [public API](https://github.com/dirdr/utazon_backend)
+Designed by Rémi INN, Developped By Adrien Pelfresne.
 
 ## Stack
+
 React • TypeScript • Three.js • Framer Motion • Tailwind CSS • Wouter
