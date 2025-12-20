@@ -1,0 +1,37 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: ["**"]  # All branches
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+    name: Quality Checks (Lint, Type-check, Build)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npx tsc --noEmit
+
+      - name: Build application (validation)
+        env:
+          VITE_SITE_URL: https://integration.utazon.fr
+          VITE_UTAZON_API_URL: ${{ secrets.VITE_UTAZON_API_URL }}
+        run: npm run build
