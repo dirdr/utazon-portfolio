@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-    tags:
-      - "v*.*.*"
+      - production
 
 jobs:
   deploy:
@@ -26,11 +25,11 @@ jobs:
       - name: Determine deployment environment
         id: environment
         run: |
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+          if [[ "${{ github.ref_name }}" == "production" ]]; then
             echo "name=production" >> $GITHUB_OUTPUT
             echo "site_url=https://utazon.fr" >> $GITHUB_OUTPUT
             echo "is_production=true" >> $GITHUB_OUTPUT
-            echo "Deploying to Prod (utazon.fr) - Release ${{ github.ref_name }}"
+            echo "Deploying to Prod (utazon.fr) - Branch production"
           else
             echo "name=integration" >> $GITHUB_OUTPUT
             echo "site_url=https://integration.utazon.fr" >> $GITHUB_OUTPUT
@@ -55,10 +54,15 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: pages deploy dist --project-name=utazon-portfolio --branch=${{ github.ref_name }} ${{ steps.environment.outputs.is_production == 'true' && '--commit-dirty=true' || '' }}
 
+      - name: Get version for notification
+        if: steps.environment.outputs.is_production == 'true'
+        id: version
+        run: echo "number=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
       - name: Send Discord notification
         if: steps.environment.outputs.is_production == 'true'
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          args: "@here Portfolio ${{ github.ref_name }} deployed to PRODUCTION 🚀 https://utazon.fr"
+          args: "@here Portfolio v${{ steps.version.outputs.number }} deployed to PRODUCTION 🚀 https://utazon.fr"
