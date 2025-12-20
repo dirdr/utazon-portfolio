@@ -5,10 +5,8 @@ on:
     branches:
       - main
       - production
-  workflow_run:
-    workflows: ["Create Release"]
-    types:
-      - completed
+    tags:
+      - "v*.*.*"
 
 jobs:
   deploy:
@@ -29,7 +27,7 @@ jobs:
       - name: Determine deployment environment
         id: environment
         run: |
-          if [[ "${{ github.ref_name }}" == "production" ]]; then
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             echo "name=production" >> $GITHUB_OUTPUT
             echo "site_url=https://utazon.fr" >> $GITHUB_OUTPUT
             echo "is_production=true" >> $GITHUB_OUTPUT
