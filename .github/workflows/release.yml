@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version_type:
-        description: 'Version bump type'
+        description: "Version bump type"
         required: true
         type: choice
         options:
@@ -12,7 +12,7 @@ on:
           - minor
           - major
           - custom
-        default: 'patch'
+        default: "patch"
       custom_version:
         description: 'Custom version (only if type is "custom", e.g., 2.0.0)'
         required: false
@@ -27,17 +27,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Need full history to read tags
-
+          fetch-depth: 0
       - name: Get latest tag
         id: latest_tag
         run: |
-          # Get latest tag, fallback to v0.0.0 if no tags exist
           latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Latest tag: $latest_tag"
           echo "tag=$latest_tag" >> $GITHUB_OUTPUT
 
-          # Remove 'v' prefix for version calculation
           current_version=${latest_tag#v}
           echo "current_version=$current_version" >> $GITHUB_OUTPUT
 
@@ -104,10 +101,8 @@ jobs:
 
       - name: Update production branch
         run: |
-          # Fetch all branches
           git fetch origin
 
-          # Check if production branch exists remotely
           if git ls-remote --heads origin production | grep -q production; then
             echo "Production branch exists, checking out..."
             git checkout production
@@ -117,10 +112,8 @@ jobs:
             git checkout -b production
           fi
 
-          # Merge main into production
           git merge main --no-edit -m "chore: release ${{ steps.new_version.outputs.tag }} to production"
 
-          # Push production branch
           git push origin production
 
           echo "Production branch updated with ${{ steps.new_version.outputs.tag }}"

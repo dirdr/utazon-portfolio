@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: ["**"]  # All branches
+    branches: ["**"]
   pull_request:
     branches: [main]
 
