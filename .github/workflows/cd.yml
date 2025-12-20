@@ -63,7 +63,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=utazon-portfolio --branch=${{ github.ref_name }} ${{ steps.environment.outputs.is_production == 'true' && '--commit-dirty=true' || '' }}
+          command: pages deploy dist --project-name=utazon-portfolio --branch=${{ github.ref_name }} ${{ steps.environment.outputs.is_production == 'true' && '--production --commit-dirty=true' || '' }}
 
       - name: Get version for notification
         if: steps.environment.outputs.is_production == 'true'
