@@ -30,12 +30,12 @@ jobs:
             echo "name=production" >> $GITHUB_OUTPUT
             echo "site_url=https://utazon.fr" >> $GITHUB_OUTPUT
             echo "is_production=true" >> $GITHUB_OUTPUT
-            echo "✅ Deploying to PRODUCTION (utazon.fr) - Release ${{ github.ref_name }}"
+            echo "Deploying to Prod (utazon.fr) - Release ${{ github.ref_name }}"
           else
             echo "name=integration" >> $GITHUB_OUTPUT
             echo "site_url=https://integration.utazon.fr" >> $GITHUB_OUTPUT
             echo "is_production=false" >> $GITHUB_OUTPUT
-            echo "🚀 Deploying to INTEGRATION (integration.utazon.fr) - Branch ${{ github.ref_name }}"
+            echo "Deploying to Integration (integration.utazon.fr) - Branch ${{ github.ref_name }}"
           fi
 
       - name: Install dependencies
