@@ -7,16 +7,25 @@ on:
       - production
     tags:
       - "v*.*.*"
+  workflow_run:
+    workflows: ["Create Release"]
+    types:
+      - completed
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
       deployments: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'production' || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,7 +36,7 @@ jobs:
       - name: Determine deployment environment
         id: environment
         run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          if [[ "${GITHUB_REF}" == refs/tags/* ]] || [[ "${GITHUB_REF}" == refs/heads/production ]] || [[ "${{ github.event_name }}" == "workflow_run" ]]; then
             echo "name=production" >> $GITHUB_OUTPUT
             echo "site_url=https://utazon.fr" >> $GITHUB_OUTPUT
             echo "is_production=true" >> $GITHUB_OUTPUT
