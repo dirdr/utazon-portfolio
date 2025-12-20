@@ -1,4 +1,4 @@
-name: Preview Deployment
+name: Continuous Deployment (Preview)
 
 on:
   push:
