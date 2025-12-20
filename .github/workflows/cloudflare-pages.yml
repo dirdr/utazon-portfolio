@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   deploy:
@@ -49,14 +49,11 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         id: deploy
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: utazon-portfolio
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_name }}
+          command: pages deploy dist --project-name=utazon-portfolio --branch=${{ github.ref_name }} ${{ steps.environment.outputs.is_production == 'true' && '--commit-dirty=true' || '' }}
 
       - name: Send Discord notification
         if: steps.environment.outputs.is_production == 'true'
@@ -64,4 +61,4 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          args: "@here The portfolio ${{ github.ref_name }} has been deployed to production on Cloudflare Pages 🚀\n\nDeployment URL: ${{ steps.deploy.outputs.url }}"
+          args: "@here The portfolio ${{ github.ref_name }} has been deployed to production on Cloudflare Pages 🚀"
