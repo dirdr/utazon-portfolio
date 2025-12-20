@@ -4,6 +4,7 @@ import { SHOWCASE_STYLES } from "../../constants/showcaseStyles";
 import { cn } from "../../utils/cn";
 import { usePresignedVideoUrl } from "../../hooks/usePresignedVideoUrl";
 import { useRef, useState, useEffect } from "react";
+import { t } from "i18next";
 
 interface MixedGrid2x2ShowcaseProps {
   data: MixedGrid2x2ShowcaseData;
@@ -22,7 +23,9 @@ export const MixedGrid2x2Showcase = ({
   const [videoError, setVideoError] = useState(false);
 
   // Fetch presigned URL for backend videos
-  const { url: videoUrl, loading: urlLoading } = usePresignedVideoUrl(video.src);
+  const { url: videoUrl, loading: urlLoading } = usePresignedVideoUrl(
+    video.src,
+  );
 
   useEffect(() => {
     if (videoReady && videoRef.current) {
@@ -34,12 +37,7 @@ export const MixedGrid2x2Showcase = ({
   }, [videoReady]);
 
   return (
-    <div
-      className={cn(
-        "w-full max-w-5xl mx-auto",
-        className,
-      )}
-    >
+    <div className={cn("w-full max-w-5xl mx-auto", className)}>
       <div
         className={cn(
           "grid grid-cols-1 md:grid-cols-2",
@@ -61,6 +59,7 @@ export const MixedGrid2x2Showcase = ({
               />
             </div>
           )}
+
           {!videoError && videoUrl && (
             <video
               ref={videoRef}
@@ -85,12 +84,23 @@ export const MixedGrid2x2Showcase = ({
               }}
             />
           )}
+
+          {/* COPYRIGHT OVERLAY */}
+          {!videoError && videoUrl && (
+            <div className="absolute bottom-2 left-0 w-full text-center">
+              <p className="text-sm text-gray-500 bg-black/50 px-2 py-1 inline-block rounded">
+                {t("copyright.videoCopyright")}
+              </p>
+            </div>
+          )}
+
           {videoError && (
             <div className="w-full h-full flex items-center justify-center">
               <p className="text-white text-sm">Video unavailable</p>
             </div>
           )}
         </div>
+
         {images[0] && (
           <figure className="w-full">
             <ShowcaseImage
