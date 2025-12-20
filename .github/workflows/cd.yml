@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - production
+  workflow_run:
+    workflows: ["Create Release"]
+    types:
+      - completed
 
 jobs:
   deploy:

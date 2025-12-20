@@ -145,6 +145,5 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
           echo "- **Production branch** updated with ${{ steps.new_version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Production deployment to **utazon.fr** started automatically" >> $GITHUB_STEP_SUMMARY
           echo "- Check [CD workflow](https://github.com/${{ github.repository }}/actions/workflows/cd.yml) for deployment status" >> $GITHUB_STEP_SUMMARY
           echo "- Discord notification will be sent when deployment completes" >> $GITHUB_STEP_SUMMARY
