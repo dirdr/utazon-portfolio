@@ -35,6 +35,9 @@ export const NmaSnake: Project = {
           alt: "DJ Snake NMA 3",
         },
       ],
+      copyright: {
+        key: "copyright.videoCopyright",
+      },
     },
   ],
 };

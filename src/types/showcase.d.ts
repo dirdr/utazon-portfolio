@@ -73,6 +73,9 @@ export interface MixedGrid2x2ShowcaseData extends ShowcaseItem {
     alt: string;
     caption?: string;
   }[];
+  copyright?: {
+    key: string;
+  };
   aspectRatio?: string;
 }
 

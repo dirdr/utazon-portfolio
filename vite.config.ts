@@ -4,6 +4,10 @@ import tailwindcss from "@tailwindcss/vite";
 import { seoPlugin } from "./scripts/seo-plugin";
 
 export default defineConfig({
+  define: {
+    // Inject build timestamp for cache busting translations
+    "import.meta.env.VITE_BUILD_TIME": JSON.stringify(Date.now().toString()),
+  },
   plugins: [tailwindcss(), react(), seoPlugin()],
   assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.eot'],
   build: {
