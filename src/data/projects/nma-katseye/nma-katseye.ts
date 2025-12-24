@@ -35,6 +35,9 @@ export const NmaKatseye: Project = {
           alt: "KATSEYE NMA 3",
         },
       ],
+      copyright: {
+        key: "copyright.videoCopyright",
+      },
     },
   ],
 };

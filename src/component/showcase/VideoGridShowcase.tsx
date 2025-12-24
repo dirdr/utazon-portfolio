@@ -1,7 +1,7 @@
 import { VideoGridShowcaseData } from "../../types/showcase";
 import { SHOWCASE_STYLES } from "../../constants/showcaseStyles";
+import { CopyrightOverlay } from "../common/CopyrightOverlay";
 import { cn } from "../../utils/cn";
-import { useTranslation } from "react-i18next";
 import ReactPlayer from "react-player";
 import { usePresignedVideoUrl } from "../../hooks/usePresignedVideoUrl";
 
@@ -15,9 +15,17 @@ interface GridVideoItemProps {
   src: string;
   title?: string;
   border: boolean;
+  showCopyright?: boolean;
+  copyrightKey?: string;
 }
 
-const GridVideoItem = ({ src, title, border }: GridVideoItemProps) => {
+const GridVideoItem = ({
+  src,
+  title,
+  border,
+  showCopyright,
+  copyrightKey,
+}: GridVideoItemProps) => {
   const { url: videoUrl, loading } = usePresignedVideoUrl(src);
 
   return (
@@ -50,6 +58,11 @@ const GridVideoItem = ({ src, title, border }: GridVideoItemProps) => {
             }}
           />
         )}
+
+        {/* COPYRIGHT OVERLAY */}
+        {showCopyright && copyrightKey && (
+          <CopyrightOverlay translationKey={copyrightKey} />
+        )}
       </div>
       {title && <figcaption className="sr-only">{title}</figcaption>}
     </figure>
@@ -61,7 +74,6 @@ export const VideoGridShowcase = ({
   className,
   border = false,
 }: VideoGridShowcaseProps) => {
-  const { t } = useTranslation();
   const { videos } = data;
 
   return (
@@ -73,17 +85,11 @@ export const VideoGridShowcase = ({
             src={video.src}
             title={video.title}
             border={border}
+            showCopyright={!!data.copyright}
+            copyrightKey={data.copyright?.key}
           />
         ))}
       </div>
-
-      {data.copyright && (
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-500 text-muted">
-            {t(data.copyright.key)}
-          </p>
-        </div>
-      )}
     </div>
   );
 };

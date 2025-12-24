@@ -1,6 +1,6 @@
 import { cn } from "../../utils/cn";
-import { useRef, useState, useEffect } from "react";
 import { useAnimationControl } from "../../hooks/useAnimationControl";
+import { useVideoAutoplay } from "../../hooks/useVideoAutoplay";
 
 export interface ProjectVideoCardProps {
   video: {
@@ -20,23 +20,17 @@ export const ProjectVideoCard = ({
   className,
   glintSpeed = "3s",
 }: ProjectVideoCardProps) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-
   const { ref: animationRef, shouldAnimate } = useAnimationControl({
     threshold: 0.2,
     rootMargin: "100px",
   });
 
-  useEffect(() => {
-    if (videoReady && videoRef.current) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {});
-      }
-    }
-  }, [videoReady]);
+  // Centralized autoplay hook with mobile compatibility
+  const { videoRef, hasError, videoProps } = useVideoAutoplay({
+    enabled: true,
+    retryDelay: 500,
+    maxRetries: 3,
+  });
 
   return (
     <div
@@ -48,46 +42,16 @@ export const ProjectVideoCard = ({
       <div className="glint-card-content-square">
         <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden video-container flex flex-col bg-black">
           <div className="relative flex-[55] w-full">
-            {!videoError && (
+            {!hasError && (
               <video
                 ref={videoRef}
                 className="h-full w-full object-cover"
                 src={video.src}
-                muted
-                loop
-                playsInline
-                disablePictureInPicture
-                disableRemotePlayback
-                preload="metadata"
-                webkit-playsinline="true"
-                x5-playsinline="true"
-                style={{
-                  transform: "translateZ(0)",
-                  backfaceVisibility: "hidden",
-                }}
-                onLoadedData={() => {
-                  setVideoReady(true);
-                }}
-                onLoadedMetadata={() => {
-                  // Additional Safari compatibility
-                  if (videoRef.current) {
-                    setVideoReady(true);
-                  }
-                }}
-                onCanPlay={() => {
-                  // Safari needs this event too
-                  if (videoRef.current) {
-                    setVideoReady(true);
-                  }
-                }}
-                onError={() => {
-                  setVideoReady(false);
-                  setVideoError(true);
-                }}
+                {...videoProps}
               />
             )}
 
-            {videoError && (
+            {hasError && (
               <div className="h-full w-full bg-black flex items-center justify-center">
                 <p className="text-white">Video unavailable</p>
               </div>
