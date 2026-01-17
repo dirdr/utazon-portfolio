@@ -18,7 +18,7 @@ export const getCanonicalUrl = (path: string = ''): string => {
 /**
  * Get Open Graph image URL
  */
-export const getOgImageUrl = (imagePath: string = 'images/og-image.jpg'): string => {
+export const getOgImageUrl = (imagePath: string = 'images/og-image.png'): string => {
   const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
   return `${config.siteUrl}/${cleanPath}`;
 };
