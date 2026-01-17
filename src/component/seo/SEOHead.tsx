@@ -18,7 +18,7 @@ const DEFAULT_SEO: SEOProps = {
     "Portfolio of Antoine Vernez (utazon) - Creative Director, Visual Artist and Video Producer. Discover innovative projects in advertising, music videos, and digital art.",
   keywords:
     "Antoine Vernez, utazon, creative director, visual artist, video producer, advertising, music videos, digital art, motion graphics, post-production, France",
-  ogImage: getOgImageUrl("images/og-image.jpg"),
+  ogImage: getOgImageUrl("images/og-image.png"),
   ogType: "website",
   canonicalUrl: getCanonicalUrl(),
 };

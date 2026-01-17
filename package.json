@@ -1,13 +1,13 @@
 {
   "name": "utazon-portfolio",
   "private": true,
-  "version": "2.1.11",
+  "version": "2.1.12",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run seo:generate",
-    "build:integration": "VITE_SITE_URL=https://integration.utazon.fr npm run build",
-    "build:production": "VITE_SITE_URL=https://utazon.fr npm run build",
+    "build": "tsc && vite build && bun run seo:generate",
+    "build:integration": "VITE_SITE_URL=https://integration.utazon.fr bun run build",
+    "build:production": "VITE_SITE_URL=https://utazon.fr bun run build",
     "seo:generate": "tsx scripts/generate-seo.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "preview": "vite preview"
