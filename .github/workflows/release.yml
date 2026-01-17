@@ -38,6 +38,11 @@ jobs:
           current_version=${latest_tag#v}
           echo "current_version=$current_version" >> $GITHUB_OUTPUT
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Calculate new version
         id: new_version
         run: |
