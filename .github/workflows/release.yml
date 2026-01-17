@@ -89,7 +89,7 @@ jobs:
 
       - name: Update package.json version
         run: |
-          bun version ${{ steps.new_version.outputs.version }} --no-git-tag-version
+          bunx npm version ${{ steps.new_version.outputs.version }} --no-git-tag-version
           git add package.json bun.lockb
 
       - name: Commit version bump
