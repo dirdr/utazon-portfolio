@@ -15,8 +15,8 @@ importers:
         specifier: 9.7.0
         version: 9.7.0(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1)
       '@react-three/postprocessing':
-        specifier: 3.1.1
-        version: 3.1.1(@react-three/fiber@9.7.0(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1))(@types/three@0.185.4)(postprocessing@6.39.4(three@0.185.1))(react@19.2.7)(three@0.185.1)
+        specifier: 3.1.2
+        version: 3.1.2(@react-three/fiber@9.7.0(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1))(@types/three@0.185.4)(postprocessing@6.39.4(three@0.185.1))(react@19.2.7)(three@0.185.1)
       '@tailwindcss/vite':
         specifier: 4.3.3
         version: 4.3.3(vite@8.3.0(@types/node@25.9.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
@@ -901,8 +901,8 @@ packages:
       react-native:
         optional: true
 
-  '@react-three/postprocessing@3.1.1':
-    resolution: {integrity: sha512-WG0dhAt/JDGU3eimwq21wuajvXS7SYN5u1kBau/ElTkllFB3CSpwILJNpNctZGxo4Dz157shB66CQb9ZSU/zMQ==}
+  '@react-three/postprocessing@3.1.2':
+    resolution: {integrity: sha512-KOAg0BzMAEbHSKPjQ7eGKJ83Pspp3N1mH+RmtnR5OxBYk71CPeqDT2RbV3gWVbFHjeiEe92fg6ZdDAeyyg9OFw==}
     peerDependencies:
       '@react-three/fiber': '>=9.7.0'
       postprocessing: ^6.36.0
@@ -3143,7 +3143,7 @@ snapshots:
       - '@types/react'
       - immer
 
-  '@react-three/postprocessing@3.1.1(@react-three/fiber@9.7.0(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1))(@types/three@0.185.4)(postprocessing@6.39.4(three@0.185.1))(react@19.2.7)(three@0.185.1)':
+  '@react-three/postprocessing@3.1.2(@react-three/fiber@9.7.0(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1))(@types/three@0.185.4)(postprocessing@6.39.4(three@0.185.1))(react@19.2.7)(three@0.185.1)':
     dependencies:
       '@react-three/fiber': 9.7.0(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1)
       maath: 0.10.8(@types/three@0.185.4)(three@0.185.1)
