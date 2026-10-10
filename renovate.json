@@ -19,7 +19,7 @@
     "pnpmDedupe"
   ],
   "constraints": {
-    "pnpm": "11.28.3"
+    "pnpm": "11.28.5"
   },
   "cargo": {
     "enabled": true
