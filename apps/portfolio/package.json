@@ -14,7 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-three/drei": "10.7.8",
+    "@react-three/drei": "10.7.9",
     "@react-three/fiber": "9.7.0",
     "@react-three/postprocessing": "3.2.0",
     "@tailwindcss/vite": "4.3.3",
