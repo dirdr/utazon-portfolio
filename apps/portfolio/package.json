@@ -16,7 +16,7 @@
   "dependencies": {
     "@react-three/drei": "10.7.9",
     "@react-three/fiber": "9.7.0",
-    "@react-three/postprocessing": "3.2.0",
+    "@react-three/postprocessing": "3.2.2",
     "@tailwindcss/vite": "4.3.3",
     "@types/three": "0.185.4",
     "clsx": "2.1.1",
