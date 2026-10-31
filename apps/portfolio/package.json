@@ -2,7 +2,7 @@
   "name": "utazon-portfolio",
   "private": true,
   "version": "4.0.2",
-  "packageManager": "pnpm@11.28.6",
+  "packageManager": "pnpm@11.28.9",
   "type": "module",
   "scripts": {
     "dev": "vite",
