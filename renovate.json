@@ -19,7 +19,7 @@
     "pnpmDedupe"
   ],
   "constraints": {
-    "pnpm": "11.28.12"
+    "pnpm": "11.28.13"
   },
   "cargo": {
     "enabled": true
