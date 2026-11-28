@@ -33,8 +33,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       i18next-http-backend:
-        specifier: 4.0.10
-        version: 4.0.10
+        specifier: 4.1.2
+        version: 4.1.2
       lenis:
         specifier: 1.3.26
         version: 1.3.26(react@19.2.7)
@@ -1708,8 +1708,8 @@ packages:
   i18next-browser-languagedetector@8.2.1:
     resolution: {integrity: sha512-bZg8+4bdmaOiApD7N7BPT9W8MLZG+nPTOFlLiJiT8uzKXFjhxw4v2ierCXOwB5sFDMtuA5G4kgYZ0AznZxQ/cw==}
 
-  i18next-http-backend@4.0.10:
-    resolution: {integrity: sha512-CfdQuwIVijbrS/fmiTAQYcYyje4nMbH9aIjKYhhm5bgVmWKWLOM1F7qrA1o63Jl1JxQcRjdtWhKlvDzyqV9aPg==}
+  i18next-http-backend@4.1.2:
+    resolution: {integrity: sha512-AwcMCsyzucO7puxbqlGARIkmV4DD4wjC6hOEBq6u8x1f+3CGT5kQGmXPIYsV/r48WCBAyWT+TK4gmCz0bx3lNg==}
     engines: {node: '>=18'}
 
   i18next@26.4.2:
@@ -3907,7 +3907,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.10
 
-  i18next-http-backend@4.0.10: {}
+  i18next-http-backend@4.1.2: {}
 
   i18next@26.4.2(typescript@6.0.3):
     optionalDependencies:
